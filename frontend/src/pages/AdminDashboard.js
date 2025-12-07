@@ -1,4 +1,4 @@
-// src/pages/AdminDashboard.js
+// frontend/src/pages/AdminDashboard.js
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axiosInstance";
@@ -46,94 +46,69 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Admin Dashboard</h2>
-      <p>
+    <div className="admin-page">
+      <h2 className="admin-header-title">Admin Dashboard</h2>
+      <p className="admin-header-subtitle">
         Welcome, Admin. From here you can manage users and view system stats.
       </p>
 
       {loadingStats && <p>Loading stats...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="admin-error">{error}</p>}
 
       {stats && (
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            marginTop: "20px",
-            flexWrap: "wrap",
-          }}
-        >
-          <div
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px 15px",
-              minWidth: "180px",
-            }}
-          >
-            <h4>Total Users</h4>
-            <p>{stats.totalUsers}</p>
+        <>
+          <div className="admin-card-grid">
+            <div className="admin-card">
+              <div className="admin-card-title">Total Users</div>
+              <div className="admin-card-value">{stats.totalUsers}</div>
+            </div>
+
+            <div className="admin-card">
+              <div className="admin-card-title">Suppliers</div>
+              <div className="admin-card-value">{stats.totalSuppliers}</div>
+            </div>
+
+            <div className="admin-card">
+              <div className="admin-card-title">Supermarkets</div>
+              <div className="admin-card-value">
+                {stats.totalSupermarkets}
+              </div>
+            </div>
+
+            <div className="admin-card">
+              <div className="admin-card-title">Pending Users</div>
+              <div className="admin-card-value">{stats.pendingUsers}</div>
+            </div>
+
+            <div className="admin-card">
+              <div className="admin-card-title">Approved Users</div>
+              <div className="admin-card-value">{stats.approvedUsers}</div>
+            </div>
           </div>
 
-          <div
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px 15px",
-              minWidth: "180px",
-            }}
-          >
-            <h4>Suppliers</h4>
-            <p>{stats.totalSuppliers}</p>
-          </div>
-
-          <div
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px 15px",
-              minWidth: "180px",
-            }}
-          >
-            <h4>Supermarkets</h4>
-            <p>{stats.totalSupermarkets}</p>
-          </div>
-
-          <div
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px 15px",
-              minWidth: "180px",
-            }}
-          >
-            <h4>Pending Users</h4>
-            <p>{stats.pendingUsers}</p>
-          </div>
-
-          <div
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px 15px",
-              minWidth: "180px",
-            }}
-          >
-            <h4>Approved Users</h4>
-            <p>{stats.approvedUsers}</p>
-          </div>
-        </div>
+          {/* Charts */}
+          <AdminStatsCharts stats={stats} />
+        </>
       )}
 
-      {/* Charts section */}
-      <AdminStatsCharts stats={stats} />
-
-      <div style={{ marginTop: "30px", display: "flex", gap: "10px" }}>
-        <button onClick={() => navigate("/admin/pending-users")}>
+      <div className="admin-actions-row">
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate("/admin/pending-users")}
+        >
           Manage Pending Users
         </button>
 
-        <button onClick={() => navigate("/admin/users")}>
+        <button
+          className="btn"
+          onClick={() => navigate("/admin/users")}
+        >
           Manage Suppliers & Supermarkets
         </button>
 
-        <button onClick={downloadReport}>Download Users Report (CSV)</button>
+        <button className="btn" onClick={downloadReport}>
+          Download Users Report (CSV)
+        </button>
       </div>
     </div>
   );
