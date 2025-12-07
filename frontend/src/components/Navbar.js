@@ -13,96 +13,52 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "10px 20px",
-        background: "#222",
-        color: "#fff",
-      }}
-    >
-      {/* Left side - logo / home */}
-      <div>
-        <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>
-          <strong>Inventory System</strong>
-        </Link>
+    <nav className="navbar">
+      <div className="navbar-brand">
+        <Link to="/">Inventory System</Link>
       </div>
 
-      {/* Right side - links */}
-      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-        {/* 🔹 If NO user is logged in */}
+      <div className="navbar-links">
         {!user && (
           <>
-            <Link to="/login" style={{ color: "#fff", textDecoration: "none" }}>
+            <Link to="/login" className="navbar-link">
               Login
             </Link>
-            <Link
-              to="/register"
-              style={{ color: "#fff", textDecoration: "none" }}
-            >
+            <Link to="/register" className="navbar-link">
               Register
             </Link>
           </>
         )}
 
-        {/* 🔹 If user IS logged in */}
         {user && (
           <>
-            {/* Admin-only links */}
             {user.role === "admin" && (
               <>
-                <Link
-                  to="/admin/dashboard"
-                  style={{ color: "#fff", textDecoration: "none" }}
-                >
+                <Link to="/admin/dashboard" className="navbar-link">
                   Admin Dashboard
                 </Link>
-                <Link
-                  to="/admin/pending-users"
-                  style={{ color: "#fff", textDecoration: "none" }}
-                >
+                <Link to="/admin/pending-users" className="navbar-link">
                   Pending Users
                 </Link>
-                <Link
-                  to="/admin/users"
-                  style={{ color: "#fff", textDecoration: "none" }}
-                >
+                <Link to="/admin/users" className="navbar-link">
                   Manage Users
                 </Link>
               </>
             )}
 
-            {/* Supplier link */}
             {user.role === "supplier" && (
-              <Link
-                to="/supplier/dashboard"
-                style={{ color: "#fff", textDecoration: "none" }}
-              >
+              <Link to="/supplier/dashboard" className="navbar-link">
                 Supplier Dashboard
               </Link>
             )}
 
-            {/* Supermarket link */}
             {user.role === "supermarket" && (
-              <Link
-                to="/supermarket/dashboard"
-                style={{ color: "#fff", textDecoration: "none" }}
-              >
+              <Link to="/supermarket/dashboard" className="navbar-link">
                 Supermarket Dashboard
               </Link>
             )}
 
-            {/* Logout button (for all logged-in users) */}
-            <button
-              onClick={logout}
-              style={{
-                marginLeft: "10px",
-                padding: "5px 10px",
-                cursor: "pointer",
-              }}
-            >
+            <button className="navbar-logout-btn" onClick={logout}>
               Logout
             </button>
           </>

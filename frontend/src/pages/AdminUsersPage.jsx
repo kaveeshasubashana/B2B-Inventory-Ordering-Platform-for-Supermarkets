@@ -33,12 +33,15 @@ const AdminUsersPage = () => {
   }, [roleFilter, statusFilter]);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Manage Suppliers & Supermarkets</h2>
+    <div className="admin-page">
+      <h2 className="admin-header-title">Manage Suppliers &amp; Supermarkets</h2>
+      <p className="admin-header-subtitle">
+        Filter and view registered suppliers, supermarkets, and admins.
+      </p>
 
-      <div style={{ margin: "15px 0", display: "flex", gap: "10px" }}>
+      <div className="admin-filter-row">
         <div>
-          <label>Role: </label>
+          <label>Role:</label>
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
@@ -50,7 +53,7 @@ const AdminUsersPage = () => {
         </div>
 
         <div>
-          <label>Status: </label>
+          <label>Status:</label>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -61,59 +64,43 @@ const AdminUsersPage = () => {
           </select>
         </div>
 
-        <button onClick={fetchUsers}>Refresh</button>
+        <button className="btn" onClick={fetchUsers}>
+          Refresh
+        </button>
       </div>
 
       {loading && <p>Loading users...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="admin-error">{error}</p>}
 
-      {!loading && users.length === 0 && <p>No users found.</p>}
+      {!loading && users.length === 0 && (
+        <p className="admin-text-muted">No users found.</p>
+      )}
 
       {users.length > 0 && (
-        <table
-          style={{
-            marginTop: "10px",
-            borderCollapse: "collapse",
-            minWidth: "600px",
-          }}
-        >
-          <thead>
-            <tr>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>Name</th>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>
-                Email
-              </th>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>Role</th>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>
-                Approved
-              </th>
-              <th style={{ border: "1px solid #ccc", padding: "8px" }}>
-                Created At
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((u) => (
-              <tr key={u._id}>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  {u.name}
-                </td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  {u.email}
-                </td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  {u.role}
-                </td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  {u.isApproved ? "Yes" : "No"}
-                </td>
-                <td style={{ border: "1px solid #ccc", padding: "8px" }}>
-                  {new Date(u.createdAt).toLocaleString()}
-                </td>
+        <div className="admin-table-wrapper">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Approved</th>
+                <th>Created At</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {users.map((u) => (
+                <tr key={u._id}>
+                  <td>{u.name}</td>
+                  <td>{u.email}</td>
+                  <td>{u.role}</td>
+                  <td>{u.isApproved ? "Yes" : "No"}</td>
+                  <td>{new Date(u.createdAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

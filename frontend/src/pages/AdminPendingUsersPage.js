@@ -1,4 +1,4 @@
-// frontend/src/pages/AdminPendingUsersPage.jsx
+// frontend/src/pages/AdminPendingUsersPage.js
 import React, { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
 
@@ -44,30 +44,53 @@ const AdminPendingUsersPage = () => {
   }, []);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Pending Users</h2>
+    <div className="admin-page">
+      <h2 className="admin-header-title">Pending Users</h2>
+      <p className="admin-header-subtitle">
+        Approve or reject newly registered suppliers and supermarkets.
+      </p>
 
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="admin-error">{error}</p>}
+      {!loading && pendingUsers.length === 0 && (
+        <p className="admin-text-muted">No pending users.</p>
+      )}
 
-      {pendingUsers.length === 0 && !loading && <p>No pending users.</p>}
-
-      <ul>
-        {pendingUsers.map((u) => (
-          <li key={u._id} style={{ marginBottom: "10px" }}>
-            <strong>{u.name}</strong> - {u.email} - {u.role}
-            <div style={{ marginTop: "5px" }}>
-              <button
-                onClick={() => approveUser(u._id)}
-                style={{ marginRight: "5px" }}
-              >
-                Approve
-              </button>
-              <button onClick={() => rejectUser(u._id)}>Reject</button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {pendingUsers.length > 0 && (
+        <div className="admin-table-wrapper">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingUsers.map((u) => (
+                <tr key={u._id}>
+                  <td>{u.name}</td>
+                  <td>{u.email}</td>
+                  <td>{u.role}</td>
+                  <td>
+                    <button
+                      className="btn btn-primary"
+                      style={{ marginRight: 8 }}
+                      onClick={() => approveUser(u._id)}
+                    >
+                      Approve
+                    </button>
+                    <button className="btn" onClick={() => rejectUser(u._id)}>
+                      Reject
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
