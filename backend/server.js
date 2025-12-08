@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const errorHandler = require("./middleware/errorMiddleware");
+const path = require("path");
 
 dotenv.config();
 connectDB();
@@ -15,6 +16,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+//image upload
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use("/api/auth", authRoutes);
