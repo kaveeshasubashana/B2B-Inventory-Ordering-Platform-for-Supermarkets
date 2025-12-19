@@ -4,6 +4,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./SupplierDashboard.css";
+import SupplierSidebar from "./Suppliersidebar";
+import "./Suppliersidebar.css";
+import SupplierTopbar from "./SupplierTopbar";
+import "./SupplierTopbar.css";
 
 // Charts
 import {
@@ -96,18 +100,22 @@ const SupplierDashboard = () => {
     .slice(0, 5);
 
   return (
-    <div className="supplier-dashboard">
-      <div className="dashboard-header">
-        <div>
-          <h1 className="dashboard-title">Supplier Dashboard</h1>
-          <p className="dashboard-subtitle">
-            Manage your products, update stock, and track performance.
-          </p>
-        </div>
-      </div>
+    <div className="supplier-layout">
+      <SupplierSidebar />
+      <div className="supplier-main-content">
+        <SupplierTopbar />
+        <div className="supplier-dashboard">
+          <div className="dashboard-header">
+            <div>
+              <h1 className="dashboard-title">Dashboard</h1>
+              <p className="dashboard-subtitle">
+                Welcome back! Here's an overview of your inventory and orders.
+              </p>
+            </div>
+          </div>
 
-      {/* ---------- STAT CARDS ---------- */}
-      <div className="stats-grid">
+          {/* ---------- STAT CARDS ---------- */}
+          <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-info">
             <div className="stat-label">Total Products</div>
@@ -297,6 +305,8 @@ const SupplierDashboard = () => {
         ) : (
           <p className="no-data-message">All products are well stocked! 🎉</p>
         )}
+      </div>
+        </div>
       </div>
     </div>
   );

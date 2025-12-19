@@ -1,6 +1,11 @@
 // frontend/src/App.jsx
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -17,44 +22,65 @@ import PendingApprovalPage from "./pages/PendingApprovalPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AddProduct from "./pages/supplier/AddProduct";
 
+//This USe to Hide Navigation bar for tha page that dosent need it
+const MainLayout = () => {
+  return (
+    <>
+      <Navbar />
+      <div className="container">
+        <Outlet />
+      </div>
+    </>
+  );
+};
+
 const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
         <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/pending" element={<PendingApprovalPage />} />
+          {/*Routes with Navbar---*/}
+          <Route element={<MainLayout />}>
+            
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/pending" element={<PendingApprovalPage />} />
 
-          {/* 🔐 Admin-only routes */}
-          <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route
-              path="/admin/pending-users"
-              element={<AdminPendingUsersPage />}
-            />
-            <Route path="/admin/users" element={<AdminUsersPage />} />
+            
+            {/* 🔐 Admin-only routes */}
+            <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route
+                path="/admin/pending-users"
+                element={<AdminPendingUsersPage />}
+              />
+              <Route path="/admin/users" element={<AdminUsersPage />} />
+            </Route>
+
+           
+
+            {/* 🔐 Supermarket-only */}
+            <Route element={<PrivateRoute allowedRoles={["supermarket"]} />}>
+              <Route
+                path="/supermarket/dashboard"
+                element={<SupermarketDashboard />}
+              />
+            </Route>
+
+            {/* Fallback (with navbar) */}
+            <Route path="*" element={<HomePage />} />
           </Route>
 
-          {/* 🔐 Supplier-only */}
+          {/* ---------- SUPPLIER AREA (NO NAVBAR) ---------- */}
           <Route element={<PrivateRoute allowedRoles={["supplier"]} />}>
-            <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
-            <Route path="/supplier/add-product" element={<AddProduct />} />
-          </Route>
-
-          {/* 🔐 Supermarket-only */}
-          <Route element={<PrivateRoute allowedRoles={["supermarket"]} />}>
             <Route
-              path="/supermarket/dashboard"
-              element={<SupermarketDashboard />}
+              path="/supplier/dashboard"
+              element={<SupplierDashboard />}
             />
+            <Route path="/supplier/add-product" element={<AddProduct />} />
+            {/* later: /supplier/products, /supplier/orders, etc. */}
           </Route>
-
-          {/* Fallback */}
-          <Route path="*" element={<HomePage />} />
         </Routes>
       </Router>
     </AuthProvider>
