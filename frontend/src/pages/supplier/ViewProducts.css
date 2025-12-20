@@ -166,6 +166,33 @@
   border-bottom-right-radius: 12px;
 }
 
+.reset-filter-link {
+  display: block;
+  width: 100%;
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid #e2e8f0;
+  background: none;
+  border-left: none; border-right: none; border-bottom: none;
+  color: #ef4444; 
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+/*  */
+.clear-text-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px;
+  text-decoration: underline; 
+}
+
 .id-cell { color: #94a3b8; font-family: monospace; }
 
 .product-photo {
@@ -343,7 +370,16 @@
 }
 .card-actions button:last-child:hover {
   background-color: #fecaca;
+  
 }
+/*Change Filter Button when pressd it*/
+.filter-btn.active-filter {
+  background-color: #ecfdf5; 
+  border-color: #10b981;
+  color: #059669;
+}
+
+
 
 
 /* --- Modal & Pagination --- */

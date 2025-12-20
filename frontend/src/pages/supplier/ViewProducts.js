@@ -32,9 +32,20 @@ const ViewProducts = () => {
   const BASE_URL = "http://localhost:5000";
 
   const categories = [
-    "Beverages", "Dairy", "Snacks", "Frozen Foods", "Canned Goods",
-    "Bakery", "Meat", "Produce", "Condiments", "Cleaning Supplies",
-    "Computers", "Electronics", "Personal Care", "Other",
+    "Beverages",
+    "Dairy",
+    "Snacks",
+    "Frozen Foods",
+    "Canned Goods",
+    "Bakery",
+    "Meat",
+    "Produce",
+    "Condiments",
+    "Cleaning Supplies",
+    "Computers",
+    "Electronics",
+    "Personal Care",
+    "Other",
   ];
 
   useEffect(() => {
@@ -67,7 +78,14 @@ const ViewProducts = () => {
 
   const openAddModal = () => {
     setEditingProduct(null);
-    setFormData({ name: "", description: "", price: "", stock: "", category: "", image: "" });
+    setFormData({
+      name: "",
+      description: "",
+      price: "",
+      stock: "",
+      category: "",
+      image: "",
+    });
     setFile(null);
     setShowModal(true);
   };
@@ -89,7 +107,14 @@ const ViewProducts = () => {
   const closeModal = () => {
     setShowModal(false);
     setEditingProduct(null);
-    setFormData({ name: "", description: "", price: "", stock: "", category: "", image: "" });
+    setFormData({
+      name: "",
+      description: "",
+      price: "",
+      stock: "",
+      category: "",
+      image: "",
+    });
     setFile(null);
   };
 
@@ -123,7 +148,10 @@ const ViewProducts = () => {
       fetchProducts();
     } catch (error) {
       console.error("Error saving product:", error);
-      alert("Error saving product: " + (error.response?.data?.message || "Please try again."));
+      alert(
+        "Error saving product: " +
+          (error.response?.data?.message || "Please try again.")
+      );
     } finally {
       setFormLoading(false);
     }
@@ -141,11 +169,15 @@ const ViewProducts = () => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === "all" || product.category === categoryFilter;
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      categoryFilter === "all" || product.category === categoryFilter;
     let matchesStatus = true;
     if (statusFilter === "out-of-stock") matchesStatus = product.stock === 0;
-    else if (statusFilter === "low-stock") matchesStatus = product.stock > 0 && product.stock <= 10;
+    else if (statusFilter === "low-stock")
+      matchesStatus = product.stock > 0 && product.stock <= 10;
     else if (statusFilter === "in-stock") matchesStatus = product.stock > 10;
 
     return matchesSearch && matchesCategory && matchesStatus;
@@ -153,14 +185,32 @@ const ViewProducts = () => {
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
   };
 
   const generateProductId = (index) => `2L${3500 - (startIndex + index) * 100}`;
+
+  // filter clear option
+  const clearAllFilters = () => {
+    setCategoryFilter("all");
+    setStatusFilter("all");
+    setSearchTerm("");
+    setCurrentPage(1);
+  };
+
+  // watch whre we slect in the filter
+  const isFilterActive = categoryFilter !== "all" || statusFilter !== "all";
 
   return (
     <div className="supplier-layout">
@@ -172,8 +222,18 @@ const ViewProducts = () => {
 
           <div className="products-toolbar">
             <div className="toolbar-left">
-              <button className={`view-btn ${viewMode === "list" ? "active" : ""}`} onClick={() => setViewMode("list")}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <button
+                className={`view-btn ${viewMode === "list" ? "active" : ""}`}
+                onClick={() => setViewMode("list")}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <line x1="8" y1="6" x2="21" y2="6"></line>
                   <line x1="8" y1="12" x2="21" y2="12"></line>
                   <line x1="8" y1="18" x2="21" y2="18"></line>
@@ -183,8 +243,18 @@ const ViewProducts = () => {
                 </svg>
                 List
               </button>
-              <button className={`view-btn ${viewMode === "grid" ? "active" : ""}`} onClick={() => setViewMode("grid")}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <button
+                className={`view-btn ${viewMode === "grid" ? "active" : ""}`}
+                onClick={() => setViewMode("grid")}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <rect x="3" y="3" width="7" height="7"></rect>
                   <rect x="14" y="3" width="7" height="7"></rect>
                   <rect x="14" y="14" width="7" height="7"></rect>
@@ -193,8 +263,18 @@ const ViewProducts = () => {
                 Grid
               </button>
               <div className="filter-dropdown-container">
-                <button className="filter-btn" onClick={() => setShowFilterDropdown(!showFilterDropdown)}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <button
+                  className="filter-btn"
+                  onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                   </svg>
                   Filter
@@ -203,27 +283,53 @@ const ViewProducts = () => {
                   <div className="filter-dropdown">
                     <div className="filter-group">
                       <label>Category</label>
-                      <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+                      <select
+                        value={categoryFilter}
+                        onChange={(e) => setCategoryFilter(e.target.value)}
+                      >
                         <option value="all">All Categories</option>
-                        {categories.map((cat) => (<option key={cat} value={cat}>{cat}</option>))}
+                        {categories.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
                       </select>
                     </div>
+                    
                     <div className="filter-group">
                       <label>Status</label>
-                      <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                      <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                      >
                         <option value="all">All Status</option>
                         <option value="in-stock">In Stock</option>
                         <option value="low-stock">Low Stock</option>
                         <option value="out-of-stock">Out of Stock</option>
                       </select>
                     </div>
+                    {/* add Buton for filter dropdown */}
+                    <button
+                      className="reset-filter-link"
+                      onClick={clearAllFilters}
+                    >
+                      Clear All Filters
+                    </button>
                   </div>
+                  
                 )}
               </div>
             </div>
             <div className="toolbar-right">
               <button className="import-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                   <polyline points="17 8 12 3 7 8"></polyline>
                   <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -237,7 +343,10 @@ const ViewProducts = () => {
           </div>
 
           {loading ? (
-            <div className="loading-container"><div className="spinner"></div><p>Loading products...</p></div>
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Loading products...</p>
+            </div>
           ) : viewMode === "list" ? (
             <div className="products-table-container">
               <table className="products-table">
@@ -261,7 +370,10 @@ const ViewProducts = () => {
                       <td className="photo-cell">
                         <div className="product-photo">
                           {product.image ? (
-                            <img src={`${BASE_URL}${product.image}`} alt={product.name} />
+                            <img
+                              src={`${BASE_URL}${product.image}`}
+                              alt={product.name}
+                            />
                           ) : (
                             <div className="no-image">No Image</div>
                           )}
@@ -269,9 +381,13 @@ const ViewProducts = () => {
                       </td>
                       <td className="name-cell">
                         <div className="product-name">{product.name}</div>
-                        <div className="product-desc">{product.description}</div>
+                        <div className="product-desc">
+                          {product.description}
+                        </div>
                       </td>
-                      <td className="price-cell">Rs.{parseFloat(product.price).toFixed(2)}</td>
+                      <td className="price-cell">
+                        Rs.{parseFloat(product.price).toFixed(2)}
+                      </td>
                       <td className="status-cell">
                         {(() => {
                           let statusClass = "in-stock";
@@ -283,33 +399,73 @@ const ViewProducts = () => {
                             statusClass = "low-stock";
                             statusText = "Low Stock";
                           }
-                          return <span className={`status-badge ${statusClass}`}>{statusText}</span>;
+                          return (
+                            <span className={`status-badge ${statusClass}`}>
+                              {statusText}
+                            </span>
+                          );
                         })()}
                       </td>
                       <td className="category-cell">
-                        <span className="category-tag">#{product.category || "Other"}</span>
+                        <span className="category-tag">
+                          #{product.category || "Other"}
+                        </span>
                       </td>
                       <td className="stock-cell">{product.stock}</td>
-                      <td className="date-cell">{formatDate(product.updatedAt || product.createdAt)}</td>
-                      
+                      <td className="date-cell">
+                        {formatDate(product.updatedAt || product.createdAt)}
+                      </td>
+
                       {/* --- THIS IS THE UPDATED ACTION CELL --- */}
                       <td className="action-cell">
                         <div className="action-buttons">
-                          <button className="action-btn view" title="View Details">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="16" x2="12" y2="12"></line>
-                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                          <button
+                            className="action-btn view"
+                            title="View Details"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <line x1="12" y1="16" x2="12" y2="12"></line>
+                              <line x1="12" y1="8" x2="12.01" y2="8"></line>
                             </svg>
                           </button>
-                          <button className="action-btn edit" onClick={() => openEditModal(product)} title="Edit">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <button
+                            className="action-btn edit"
+                            onClick={() => openEditModal(product)}
+                            title="Edit"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
                           </button>
-                          <button className="action-btn delete" onClick={() => handleDelete(product._id)} title="Delete">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <button
+                            className="action-btn delete"
+                            onClick={() => handleDelete(product._id)}
+                            title="Delete"
+                          >
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
                               <polyline points="3 6 5 6 21 6"></polyline>
                               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                             </svg>
@@ -322,7 +478,9 @@ const ViewProducts = () => {
                 </tbody>
               </table>
               {filteredProducts.length === 0 && (
-                <div className="empty-state"><p>No products found</p></div>
+                <div className="empty-state">
+                  <p>No products found</p>
+                </div>
               )}
             </div>
           ) : (
@@ -332,15 +490,28 @@ const ViewProducts = () => {
                 <div key={product._id} className="product-card">
                   {/* ... Same as your existing Grid Code ... */}
                   <div className="card-image">
-                    {product.image ? <img src={`${BASE_URL}${product.image}`} alt={product.name}/> : <div className="no-image">No Image</div>}
+                    {product.image ? (
+                      <img
+                        src={`${BASE_URL}${product.image}`}
+                        alt={product.name}
+                      />
+                    ) : (
+                      <div className="no-image">No Image</div>
+                    )}
                   </div>
                   <div className="card-content">
                     <h3>{product.name}</h3>
-                    <p className="card-price">Rs.{parseFloat(product.price).toFixed(2)}</p>
+                    <p className="card-price">
+                      Rs.{parseFloat(product.price).toFixed(2)}
+                    </p>
                     <p className="card-stock">Stock: {product.stock}</p>
                     <div className="card-actions">
-                      <button onClick={() => openEditModal(product)}>Edit</button>
-                      <button onClick={() => handleDelete(product._id)}>Delete</button>
+                      <button onClick={() => openEditModal(product)}>
+                        Edit
+                      </button>
+                      <button onClick={() => handleDelete(product._id)}>
+                        Delete
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -351,9 +522,21 @@ const ViewProducts = () => {
           {totalPages > 1 && (
             <div className="pagination">
               {/* Pagination logic remains same */}
-               <button className="page-btn" disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>‹</button>
-               {/* ... etc ... */}
-               <button className="page-btn" disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>›</button>
+              <button
+                className="page-btn"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => prev - 1)}
+              >
+                ‹
+              </button>
+              {/* ... etc ... */}
+              <button
+                className="page-btn"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+              >
+                ›
+              </button>
             </div>
           )}
         </div>
@@ -361,43 +544,90 @@ const ViewProducts = () => {
       {/* Modal Code remains same... */}
       {showModal && (
         <div className="modal-overlay" onClick={closeModal}>
-            <div className="product-modal" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h2>{editingProduct ? "Edit Product" : "Add New Product"}</h2>
-                    <button className="modal-close" onClick={closeModal} style={{background:'none', border:'none', fontSize:'20px', cursor:'pointer'}}>×</button>
-                </div>
-                <form onSubmit={handleSubmit} className="modal-form">
-                    {/* Form inputs same as before */}
-                    <div className="form-group">
-                        <label>Product Name</label>
-                        <input type="text" name="name" value={formData.name} onChange={handleInputChange} required />
-                    </div>
-                    {/* ... other inputs ... */}
-                     <div className="form-group">
-                        <label>Category</label>
-                        <select name="category" value={formData.category} onChange={handleInputChange} required>
-                            <option value="">Select</option>
-                            {categories.map(c => <option key={c} value={c}>{c}</option>)}
-                        </select>
-                    </div>
-                     <div className="form-group">
-                        <label>Price</label>
-                        <input type="number" name="price" value={formData.price} onChange={handleInputChange} />
-                    </div>
-                     <div className="form-group">
-                        <label>Stock</label>
-                        <input type="number" name="stock" value={formData.stock} onChange={handleInputChange} />
-                    </div>
-                    <div className="form-group">
-                         <label>Image</label>
-                         <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-                    </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn-cancel" onClick={closeModal}>Cancel</button>
-                        <button type="submit" className="btn-submit">{formLoading ? 'Saving...' : 'Save'}</button>
-                    </div>
-                </form>
+          <div className="product-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editingProduct ? "Edit Product" : "Add New Product"}</h2>
+              <button
+                className="modal-close"
+                onClick={closeModal}
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontSize: "20px",
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
             </div>
+            <form onSubmit={handleSubmit} className="modal-form">
+              {/* Form inputs same as before */}
+              <div className="form-group">
+                <label>Product Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              {/* ... other inputs ... */}
+              <div className="form-group">
+                <label>Category</label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select</option>
+                  {categories.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Stock</label>
+                <input
+                  type="number"
+                  name="stock"
+                  value={formData.stock}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="form-group">
+                <label>Image</label>
+                <input
+                  type="file"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn-submit">
+                  {formLoading ? "Saving..." : "Save"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
