@@ -108,6 +108,28 @@ const deleteProduct = async (req, res, next) => {
     next(err);
   }
 };
+// get data for dashboard
+const getDashboardStats = async (req, res) => {
+  try {
+    // (Total Products)
+    const totalProducts = await Product.countDocuments();
+
+    //  (Low Stock)
+    const lowStock = await Product.countDocuments({ stock: { $lte: 10 } });
+
+    
+    const activeProducts = await Product.countDocuments({ stock: { $gt: 0 } });
+
+    res.status(200).json({
+      totalProducts,
+      lowStock,
+      activeProducts,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching stats" });
+  }
+};
+
 
 module.exports = {
   createProduct,
@@ -116,4 +138,5 @@ module.exports = {
   getProductById,
   updateProduct,
   deleteProduct,
+  getDashboardStats,
 };

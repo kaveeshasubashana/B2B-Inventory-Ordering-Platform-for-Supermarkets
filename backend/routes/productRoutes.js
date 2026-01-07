@@ -10,24 +10,24 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
+  getDashboardStats,
 } = require("../controllers/productController");
 
 const { protect, authorizeRoles } = require("../middleware/authMiddleware");
 
-
-
 // GET /api/products        → list all active products (for supermarkets)
 router.get("/", getAllProducts);
 
-
-
-// GET /api/products/my-products       supplier's own products
+//dashboard data route
 router.get(
-  "/my-products",
+  "/dashboard-stats",
   protect,
   authorizeRoles("supplier"),
-  getMyProducts
+  getDashboardStats
 );
+
+// GET /api/products/my-products       supplier's own products
+router.get("/my-products", protect, authorizeRoles("supplier"), getMyProducts);
 
 // GET /api/products/:id               get single product by id (public)
 router.get("/:id", getProductById);
