@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminRoute from "./routes/AdminRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import PendingUsers from "./pages/admin/PendingUsers";
+
+import SupermarketDashboard from "./pages/SupermarketDashboard";
 // import Login from "./pages/auth/Login"; // your existing login
 // import Home from "./pages/Home";        // your home page
 
@@ -30,7 +32,9 @@ function App() {
             </AdminRoute>
           }
         />
+
       </Routes>
+      <Route path="/supermarket/dashboard" element={<SupermarketDashboard />} />
     </Router>
   );
 }
