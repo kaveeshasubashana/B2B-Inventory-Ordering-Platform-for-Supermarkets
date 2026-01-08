@@ -6,21 +6,32 @@ export default function SupermarketDashboard() {
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const [me, setMe] = useState(null);
+  const [meLoading, setMeLoading] = useState(true);
+
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadAll = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/api/products");
-        setProducts(res.data || []);
+        setMeLoading(true);
+
+        const [meRes, prodRes] = await Promise.all([
+          api.get("/api/auth/me"),
+          api.get("/api/products"),
+        ]);
+
+        setMe(meRes.data);
+        setProducts(prodRes.data || []);
       } catch (err) {
         console.error(err);
-        alert("Products load failed");
+        alert(err?.response?.data?.message || "Dashboard load failed");
       } finally {
         setLoading(false);
+        setMeLoading(false);
       }
     };
 
-    loadProducts();
+    loadAll();
   }, []);
 
   const filtered = useMemo(() => {
@@ -65,6 +76,37 @@ export default function SupermarketDashboard() {
   return (
     <div style={styles.page}>
       <Header q={q} setQ={setQ} count={filtered.length} />
+
+      {/* ✅ USER PROFILE CARD */}
+      {meLoading ? (
+        <div style={styles.profileCard}>Loading profile...</div>
+      ) : me ? (
+        <div style={styles.profileCard}>
+          <div style={styles.profileTop}>
+            <div>
+              <div style={styles.profileName}>{me.name}</div>
+              <div style={styles.profileEmail}>{me.email}</div>
+            </div>
+
+            <div style={styles.profileBadgeWrap}>
+              <span style={styles.roleBadge}>{me.role}</span>
+              <span
+                style={{
+                  ...styles.approvalBadge,
+                  borderColor: me.isApproved
+                    ? "rgba(34,197,94,0.35)"
+                    : "rgba(245,158,11,0.35)",
+                  background: me.isApproved
+                    ? "rgba(34,197,94,0.12)"
+                    : "rgba(245,158,11,0.12)",
+                }}
+              >
+                {me.isApproved ? "Approved" : "Pending"}
+              </span>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {filtered.length === 0 ? (
         <div style={styles.emptyWrap}>
@@ -139,7 +181,6 @@ export default function SupermarketDashboard() {
                         : "-"}
                     </div>
 
-                    {/* Only UI (no ordering as you asked) */}
                     <button
                       style={{
                         ...styles.viewBtn,
@@ -203,6 +244,43 @@ const styles = {
   hTitle: { fontSize: 22, fontWeight: 800, letterSpacing: 0.2 },
   hSub: { fontSize: 13, color: "#94a3b8", marginTop: 6 },
 
+  /* ✅ PROFILE CARD STYLES */
+  profileCard: {
+    borderRadius: 16,
+    border: "1px solid rgba(255,255,255,0.10)",
+    background: "rgba(255,255,255,0.05)",
+    padding: 14,
+    marginBottom: 14,
+    boxShadow: "0 12px 40px rgba(0,0,0,0.25)",
+  },
+  profileTop: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 12,
+    flexWrap: "wrap",
+  },
+  profileName: { fontSize: 16, fontWeight: 900 },
+  profileEmail: { fontSize: 13, color: "#94a3b8", marginTop: 4 },
+  profileBadgeWrap: { display: "flex", gap: 8, alignItems: "center" },
+  roleBadge: {
+    fontSize: 12,
+    fontWeight: 800,
+    padding: "6px 10px",
+    borderRadius: 999,
+    border: "1px solid rgba(255,255,255,0.15)",
+    background: "rgba(255,255,255,0.08)",
+    textTransform: "capitalize",
+  },
+  approvalBadge: {
+    fontSize: 12,
+    fontWeight: 800,
+    padding: "6px 10px",
+    borderRadius: 999,
+    border: "1px solid rgba(34,197,94,0.35)",
+    background: "rgba(34,197,94,0.12)",
+  },
+
   searchWrap: {
     display: "flex",
     alignItems: "center",
@@ -237,8 +315,6 @@ const styles = {
     border: "1px solid rgba(255,255,255,0.10)",
     background: "rgba(255,255,255,0.05)",
     boxShadow: "0 12px 40px rgba(0,0,0,0.30)",
-    transform: "translateY(0)",
-    transition: "transform 0.15s ease, box-shadow 0.15s ease",
   },
 
   imgWrap: {
@@ -326,7 +402,6 @@ const styles = {
     fontWeight: 700,
   },
 
-  // Loading skeleton
   skeletonCard: {
     height: 290,
     borderRadius: 16,
@@ -337,7 +412,6 @@ const styles = {
     animation: "shimmer 1.2s infinite",
   },
 
-  // Empty state
   emptyWrap: {
     marginTop: 28,
     borderRadius: 16,
