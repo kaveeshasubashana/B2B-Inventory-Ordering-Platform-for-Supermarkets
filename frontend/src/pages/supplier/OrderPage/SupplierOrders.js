@@ -25,7 +25,7 @@ const SupplierOrders = () => {
       date: "2025-12-20",
       itemCount: 8,
       total: 45000.50,
-      status: "Shipped",
+      status: "Dispatched",
       paymentMethod: "Cash on Delivery",
       items: [
         { name: "Fresh Milk 1L", qty: 20, price: 400 },
@@ -68,7 +68,7 @@ const SupplierOrders = () => {
   const getStatusClass = (status) => {
     switch (status) {
       case "Pending": return "badge-pending";
-      case "Shipped": return "badge-shipped";
+      case "Dispatched": return "badge-out_for_delivery";
       case "Delivered": return "badge-delivered";
       case "Cancelled": return "badge-cancelled";
       default: return "";
@@ -105,7 +105,7 @@ const SupplierOrders = () => {
           {/* 2. Controls Section (Search & Tabs) */}
           <div className="controls-section">
             <div className="tabs-container">
-              {["All", "Pending", "Shipped", "Delivered"].map((tab) => (
+              {["All", "Pending", "Dispatched", "Delivered"].map((tab) => (
                 <button 
                   key={tab}
                   className={`tab-btn ${activeTab === tab ? "active" : ""}`}
@@ -234,7 +234,7 @@ const SupplierOrders = () => {
               {selectedOrder.status === "Pending" ? (
                 <>
                   <button className="btn-reject">Reject Order</button>
-                  <button className="btn-accept">Accept & Ship</button>
+                  <button className="btn-accept">Accept Order</button>
                 </>
               ) : (
                 <button className="btn-secondary" onClick={() => setSelectedOrder(null)}>Close</button>
