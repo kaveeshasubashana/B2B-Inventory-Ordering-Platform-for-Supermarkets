@@ -2,6 +2,7 @@
 const jwt = require("jsonwebtoken");
 
 // 🔐 Protect middleware (JWT verification)
+// 🔐 Protect middleware (JWT verification)
 const protect = async (req, res, next) => {
   let token;
 
@@ -11,14 +12,24 @@ const protect = async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // ✅ Attach user info to request
+      // ✅ Fetch latest user info from DB (role + district)
+      const user = await User.findById(decoded.id).select("role district isActive");
+      if (!user) {
+        return res.status(401).json({ message: "Not authorized, user not found" });
+      }
+
+      // ✅ Block inactive users (optional but good)
+      if (user.isActive === false) {
+        return res.status(403).json({ message: "Account deactivated. Contact admin." });
+      }
+
+      // ✅ Attach to req.user
       req.user = {
-        id: decoded.id,
-        role: decoded.role,
-        district: decoded.district,
+        id: user._id.toString(),
+        role: user.role,
+        district: user.district,
       };
 
       return next();
@@ -29,6 +40,9 @@ const protect = async (req, res, next) => {
 
   return res.status(401).json({ message: "Not authorized, no token" });
 };
+
+
+
 
 // 🔒 Admin-only middleware (STEP 3 FIX)
 const adminOnly = (req, res, next) => {

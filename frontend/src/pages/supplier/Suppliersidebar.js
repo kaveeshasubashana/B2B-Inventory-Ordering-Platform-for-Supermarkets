@@ -94,7 +94,7 @@ const SupplierSidebar = () => {
     { path: '/supplier/products', icon: <ProductsIcon />, label: 'Products' },
     { path: '/supplier/orders', icon: <OrdersIcon />, label: 'Orders' },
     { path: '/supplier/shipments', icon: <ShipmentsIcon />, label: 'Shipments' },
-    { path: '/supplier/customers', icon: <CustomersIcon />, label: 'Customers' },
+    { path: '/supplier/customers', icon: <CustomersIcon />, label: 'Supermarkets' },
     { path: '/supplier/reports', icon: <ReportsIcon />, label: 'Reports' },
     { path: '/supplier/invoices', icon: <InvoicesIcon />, label: 'Invoices' },
   ];
