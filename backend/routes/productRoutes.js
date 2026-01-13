@@ -2,7 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const { protect, authorizeRoles } = require("../middleware/authMiddleware");
+
 const upload = require("../middleware/uploadMiddleware"); // ✅ Image upload fix
+
+const upload = require("../middleware/uploadMiddleware");
+
 
 const {
   createProduct,
@@ -11,12 +15,16 @@ const {
   getProductById,
   updateProduct,
   deleteProduct,
+
   dashboardStats, // ✅ Make sure this is imported
+   dashboardStats,
+
 } = require("../controllers/productController");
 
 // ==========================================
 // SPECIFIC ROUTES (MUST BE AT THE TOP)
 // ==========================================
+
 
 // 1. Dashboard Stats (Fix for CastError)
 router.get(
@@ -27,11 +35,27 @@ router.get(
 );
 
 // 2. Supplier: Get Own Products
-router.get(
-  "/my-products",
+
+// SUPPLIER: create product
+// SUPPLIER: create product
+router.post(
+  "/",
   protect,
   authorizeRoles("supplier"),
-  getMyProducts
+  upload.single("image"),
+  createProduct
+);
+
+// SUPPLIER: own products
+router.get("/my-products", protect, authorizeRoles("supplier"), getMyProducts);
+
+//stats
+
+router.get(
+  "/dashboard-stats",
+  protect,
+  authorizeRoles("supplier"),
+  dashboardStats
 );
 
 // 3. Supermarket: Get All Products (Filtered by district)
@@ -63,10 +87,23 @@ router.patch(
   "/:id",
   protect,
   upload.single("image"), // ✅ Fix for image update
+
+
+// UPDATE product
+router.patch(
+  "/:id",
+  protect,
+  authorizeRoles("supplier"),
+  upload.single("image"),
+
   updateProduct
 );
 
 // 7. Delete Product
 router.delete("/:id", protect, deleteProduct);
+
+module.exports = router;
+
+
 
 module.exports = router;

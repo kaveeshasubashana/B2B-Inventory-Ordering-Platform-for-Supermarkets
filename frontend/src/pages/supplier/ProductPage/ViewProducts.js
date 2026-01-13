@@ -208,6 +208,7 @@ const ViewProducts = () => {
         <SupplierTopbar />
         <div className="view-products-page">
           <h1 className="page-title">Products</h1>
+        
 
           <div className="products-toolbar">
             <div className="toolbar-left">
@@ -326,8 +327,10 @@ const ViewProducts = () => {
                 <tbody>
                   {paginatedProducts.map((product, index) => (
                     <tr key={product._id}>
-                      <td className="id-cell" data-label="ID">{generateProductId(index)}</td>
-                      <td className="photo-cell"  data-label="Photo">
+                      <td className="id-cell" data-label="ID">
+                        {generateProductId(index)}
+                      </td>
+                      <td className="photo-cell" data-label="Photo">
                         <div className="product-photo">
                           {product.image ? (
                             <img
@@ -345,7 +348,7 @@ const ViewProducts = () => {
                           {product.description}
                         </div>
                       </td>
-                      <td className="price-cell"  data-label="Price">
+                      <td className="price-cell" data-label="Price">
                         Rs.{parseFloat(product.price).toFixed(2)}
                       </td>
                       <td className="status-cell" data-label="Status">
@@ -371,12 +374,19 @@ const ViewProducts = () => {
                           #{product.category || "Other"}
                         </span>
                       </td>
-                      <td className="stock-cell" data-label="Stock">{product.stock}</td>
+                      <td className="stock-cell" data-label="Stock">
+                        {product.stock}
+                      </td>
                       <td className="date-cell" data-label="Update">
                         {formatDate(product.updatedAt || product.createdAt)}
                       </td>
 
-                      <td className="action-cell"  data-label="Action">
+
+                     <td className="action-cell"  data-label="Action">
+
+                      {/* --- THIS IS THE UPDATED ACTION CELL --- */}
+                      <td className="action-cell" data-label="Action">
+
                         <div className="action-buttons">
                           <button
                             className="action-btn view"

@@ -1,17 +1,14 @@
+const mongoose = require("mongoose");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
-// 1. Create Order (Supermarket creates an order)
-// 1. Create Order
+/**
+ * 1. Create Order (Supermarket)
+ */
 const createOrder = async (req, res) => {
   try {
-    console.log("---- CREATE ORDER REQUEST RECEIVED ----");
-    console.log("Data from Frontend:", req.body); // Frontend එකෙන් එන data බලාගන්න
-    console.log("Logged User:", req.user); // User authenticate වෙලාද බලන්න
-
     const { items, totalAmount, supplierId, deliveryAddress, note } = req.body;
 
-    // Validation
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "No order items found" });
     }
@@ -22,9 +19,8 @@ const createOrder = async (req, res) => {
       return res.status(400).json({ message: "Delivery address is required" });
     }
 
-    // Create Order Object
     const order = new Order({
-      supermarket: req.user.id, // Auth middleware එකෙන් එන User ID
+      supermarket: req.user.id,
       supplier: supplierId,
       items: items.map((item) => ({
         product: item.product,
@@ -33,65 +29,88 @@ const createOrder = async (req, res) => {
         price: item.price,
       })),
       totalAmount,
-      deliveryAddress, // Address එක save කරන්න
-      note,            // Note එක save කරන්න
-      status: "Pending",
-      district: req.user.district, // Supermarket එකේ District එක
+      deliveryAddress,
+      note,
+      status: "pending",
+      district: req.user.district,
     });
 
     const createdOrder = await order.save();
-    console.log("✅ Order Created Successfully:", createdOrder._id);
-    
     res.status(201).json(createdOrder);
-
   } catch (error) {
-    console.error("❌ CREATE ORDER ERROR:", error); // Terminal එකේ රතු පාටින් වැරැද්ද පෙන්නයි
     res.status(500).json({ message: "Order creation failed: " + error.message });
   }
 };
 
-// 2. Get My Orders (Supermarket views their own orders)
+/**
+ * 2. Get My Orders (Supermarket)
+ */
 const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ supermarket: req.user.id })
-      .populate("supplier", "name email")
+      .populate("supplier", "name email district")
+      .populate("items.product", "name price")
       .sort({ createdAt: -1 });
+
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// 3. Get Supplier Orders (Supplier views orders assigned to them)
+/**
+ * 3. Get Supplier Orders
+ */
 const getSupplierOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ supplier: req.user.id })
-      .populate("supermarket", "name email district") // Populate supermarket details
+    const query = { supplier: req.user.id };
+
+    if (req.query.status) {
+      query.status = req.query.status;
+    }
+
+    const orders = await Order.find(query)
+      .populate("supermarket", "name email district")
       .sort({ createdAt: -1 });
+
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// 4. Get Order By ID (Common for both)
+/**
+ * 4. Get Order By ID (Access Controlled)
+ */
 const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id)
-      .populate("supermarket", "name email")
-      .populate("supplier", "name email");
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid order id" });
+    }
+
+    const order = await Order.findById(id)
+      .populate("supermarket", "name email district address")
+      .populate("supplier", "name email district")
+      .populate("items.product", "name price image");
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    // Security check: Only allow the relevant supplier or supermarket to view
     if (
-      order.supermarket._id.toString() !== req.user.id &&
-      order.supplier._id.toString() !== req.user.id &&
-      req.user.role !== "admin"
+      req.user.role === "supplier" &&
+      order.supplier.toString() !== req.user.id
     ) {
-      return res.status(403).json({ message: "Not authorized to view this order" });
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    if (
+      req.user.role === "supermarket" &&
+      order.supermarket.toString() !== req.user.id
+    ) {
+      return res.status(403).json({ message: "Access denied" });
     }
 
     res.json(order);
@@ -100,30 +119,53 @@ const getOrderById = async (req, res) => {
   }
 };
 
-// 5. Update Order Status (Supplier updates status)
+/**
+ * 5. Update Order Status (Supplier Only)
+ */
 const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    const order = await Order.findById(req.params.id);
+    const allowed = ["pending", "approved", "rejected", "dispatched", "delivered"];
 
+    if (!allowed.includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const order = await Order.findById(req.params.id);
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    // Only supplier can update status
     if (order.supplier.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Not authorized to update this order" });
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const flow = {
+      pending: ["approved", "rejected"],
+      approved: ["dispatched"],
+      rejected: [],
+      dispatched: ["delivered"],
+      delivered: [],
+    };
+
+    if (!flow[order.status].includes(status)) {
+      return res.status(400).json({
+        message: `Cannot change status from ${order.status} to ${status}`,
+      });
     }
 
     order.status = status;
-    const updatedOrder = await order.save();
-    res.json(updatedOrder);
+    await order.save();
+
+    res.json(order);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// වැදගත්ම කොටස: මේවා හරියට Export කරලා තියෙන්න ඕනේ
+/**
+ * EXPORTS
+ */
 module.exports = {
   createOrder,
   getMyOrders,

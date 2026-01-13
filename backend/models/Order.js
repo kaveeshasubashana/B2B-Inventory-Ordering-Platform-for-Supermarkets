@@ -4,14 +4,15 @@ const orderSchema = mongoose.Schema(
   {
     supermarket: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // හෝ "Supermarket" (ඔයාගේ user model නම අනුව)
+      ref: "User",
       required: true,
     },
     supplier: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // හෝ "Supplier"
+      ref: "User",
       required: true,
     },
+
     items: [
       {
         product: {
@@ -19,30 +20,42 @@ const orderSchema = mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        name: { type: String, required: true },
+        name: { type: String, required: true },      // snapshot
         quantity: { type: Number, required: true },
-        price: { type: Number, required: true },
+        price: { type: Number, required: true },     // unit price
       },
     ],
+
     totalAmount: {
       type: Number,
       required: true,
     },
+
     deliveryAddress: {
       type: String,
-      required: true, // Frontend එකෙන් මේක එවන නිසා මේක required කළා
+      required: true,
     },
+
     note: {
-      type: String, // Optional
+      type: String,
+      default: "",
     },
+
     status: {
       type: String,
-      enum: ["Pending", "Accepted", "Shipped", "Delivered", "Rejected", "Cancelled"],
-      default: "Pending",
+      enum: ["pending", "approved", "rejected", "dispatched", "delivered"],
+      default: "pending",
     },
+
     district: {
       type: String,
       required: true,
+    },
+
+    paymentMethod: {
+      type: String,
+      enum: ["credit", "cod", "bank"],
+      default: "credit",
     },
   },
   {

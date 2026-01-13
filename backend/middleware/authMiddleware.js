@@ -1,8 +1,8 @@
 // backend/middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // ඔයාගේ User Model එක මෙතනට import කරන්න
+const User = require("../models/User");
 
-// 🔐 Protect middleware (JWT verification + Fetch User form DB)
+// 🔐 Protect middleware (JWT verify + load user)
 const protect = async (req, res, next) => {
   let token;
 
@@ -11,22 +11,33 @@ const protect = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
-      // 1. Get token from header
+      // 1. Get token
       token = req.headers.authorization.split(" ")[1];
 
       // 2. Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // 3. ✅ Get User from Database (This ensures we get the District)
-      // "-password" means we don't want the password field
-      req.user = await User.findById(decoded.id).select("-password");
+      // 3. Fetch user from DB (only needed fields)
+      const user = await User.findById(decoded.id).select(
+        "role district isActive"
+      );
 
-      if (!req.user) {
+      if (!user) {
         return res.status(401).json({ message: "Not authorized, user not found" });
       }
 
-      // Debugging log (මෙය terminal එකේ district එක print කරයි)
-      // console.log("Auth Middleware - User District:", req.user.district);
+      if (user.isActive === false) {
+        return res
+          .status(403)
+          .json({ message: "Account deactivated. Contact admin." });
+      }
+
+      // 4. Attach user to request
+      req.user = {
+        id: user._id.toString(),
+        role: user.role,
+        district: user.district,
+      };
 
       next();
     } catch (error) {
@@ -40,24 +51,19 @@ const protect = async (req, res, next) => {
 
 // 🔒 Admin-only middleware
 const adminOnly = (req, res, next) => {
-  if (req.user && req.user.role === "admin") {
-    next();
-  } else {
-    res.status(403).json({ message: "Admin access required" });
-  }
+  if (req.user && req.user.role === "admin") next();
+  else res.status(403).json({ message: "Admin access required" });
 };
 
-// 🎭 Optional: Role-based authorization
-const authorizeRoles = (...roles) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Forbidden: insufficient role" });
-    }
-    next();
-  };
+// 🎭 Role-based authorization
+const authorizeRoles = (...roles) => (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+  if (!roles.includes(req.user.role)) {
+    return res.status(403).json({ message: "Forbidden: insufficient role" });
+  }
+  next();
 };
 
 module.exports = {
