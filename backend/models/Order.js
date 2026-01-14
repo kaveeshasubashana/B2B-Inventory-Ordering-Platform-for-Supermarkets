@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema(
+const orderSchema = mongoose.Schema(
   {
     supermarket: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", 
+      ref: "User",
       required: true,
     },
     supplier: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", 
+      ref: "User",
       required: true,
     },
 
@@ -20,14 +20,26 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        name: { type: String, required: true },   // snapshot
-        qty: { type: Number, required: true },
-        price: { type: Number, required: true },  // snapshot (unit price)
-        lineTotal: { type: Number, required: true },
+        name: { type: String, required: true },      // snapshot
+        quantity: { type: Number, required: true },
+        price: { type: Number, required: true },     // unit price
       },
     ],
 
-    totalAmount: { type: Number, required: true },
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
+
+    deliveryAddress: {
+      type: String,
+      required: true,
+    },
+
+    note: {
+      type: String,
+      default: "",
+    },
 
     status: {
       type: String,
@@ -35,15 +47,20 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
     },
 
+    district: {
+      type: String,
+      required: true,
+    },
+
     paymentMethod: {
       type: String,
       enum: ["credit", "cod", "bank"],
       default: "credit",
     },
-
-    notes: { type: String, default: "" },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 module.exports = mongoose.model("Order", orderSchema);
