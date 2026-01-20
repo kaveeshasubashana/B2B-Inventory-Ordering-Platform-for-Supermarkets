@@ -11,6 +11,7 @@ const path = require("path");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const supermarketRoutes = require("./routes/supermarketRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 
 
 dotenv.config();
@@ -44,6 +45,9 @@ app.use("/api/supermarkets", supermarketRoutes);
 
 // Error handler
 app.use(errorHandler);
+
+//report
+app.use("/api/reports", reportRoutes);
 
 const PORT = process.env.PORT || 5000;
 
