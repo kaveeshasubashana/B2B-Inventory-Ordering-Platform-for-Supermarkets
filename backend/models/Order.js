@@ -49,7 +49,7 @@ const orderSchema = mongoose.Schema(
     // ✅ Status Enum (Must include 'Accepted' and 'Rejected')
     status: {
       type: String,
-      enum: ["Pending", "Accepted", "Shipped", "Delivered", "Rejected", "Cancelled"],
+      enum: ["Pending", "Accepted","Dispatched","Delivered", "Rejected"],
       default: "Pending",
     },
     district: {

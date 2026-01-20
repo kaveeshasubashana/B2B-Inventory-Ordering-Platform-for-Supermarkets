@@ -9,13 +9,20 @@ const Product = require("../models/Product");
 
 const createOrder = async (req, res) => {
   try {
-    const { items, totalAmount, supplierId, deliveryAddress, note, paymentMethod } = req.body;
+    const {
+      items,
+      totalAmount,
+      supplierId,
+      deliveryAddress,
+      note,
+      paymentMethod,
+    } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({ message: "No order items" });
     }
 
-    // ✅ Payment Logic: Card නම් කෙලින්ම Paid, නැත්නම් Pending
+    //
     let initialPaymentStatus = "Pending";
     if (paymentMethod === "Card") {
       initialPaymentStatus = "Paid";
@@ -34,7 +41,7 @@ const createOrder = async (req, res) => {
       deliveryAddress,
       note,
       paymentMethod: paymentMethod || "Cash", // Default to Cash
-      paymentStatus: initialPaymentStatus,    // Auto set to Paid or Pending
+      paymentStatus: initialPaymentStatus, // Auto set to Paid or Pending
       status: "Pending",
       district: req.user.district,
     });
@@ -42,7 +49,7 @@ const createOrder = async (req, res) => {
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);
   } catch (error) {
-    console.error("Order Create Error:", error); // Terminal එකේ Error එක පෙන්නන්න
+    console.error("Order Create Error:", error); //
     res.status(500).json({ message: error.message });
   }
 };
@@ -130,7 +137,15 @@ const getOrderById = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    const allowed = ["pending", "approved", "rejected", "dispatched", "delivered"];
+
+    // ✅ Match your Order schema enum (CASE-SENSITIVE)
+    const allowed = [
+      "Pending",
+      "Accepted",
+      "Dispatched",
+      "Delivered",
+      "Rejected",
+    ];
 
     if (!allowed.includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
@@ -141,19 +156,23 @@ const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    // ✅ supplier-only
     if (order.supplier.toString() !== req.user.id) {
       return res.status(403).json({ message: "Not authorized" });
     }
 
+    // ✅ FIXED FLOW (matches your real statuses)
     const flow = {
-      pending: ["approved", "rejected"],
-      approved: ["dispatched"],
-      rejected: [],
-      dispatched: ["delivered"],
-      delivered: [],
+      Pending: ["Accepted", "Rejected"],
+      Accepted: ["Dispatched"],
+      Dispatched: ["Delivered"],
+      Delivered: [],
+      Rejected: [],
     };
 
-    if (!flow[order.status].includes(status)) {
+    // ✅ Prevent crash if status is unexpected
+    const nextAllowed = flow[order.status] || [];
+    if (!nextAllowed.includes(status)) {
       return res.status(400).json({
         message: `Cannot change status from ${order.status} to ${status}`,
       });
@@ -164,6 +183,7 @@ const updateOrderStatus = async (req, res) => {
 
     res.json(order);
   } catch (error) {
+    console.error("Update status error:", error);
     res.status(500).json({ message: error.message });
   }
 };
