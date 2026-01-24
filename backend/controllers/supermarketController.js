@@ -6,7 +6,7 @@ const getMyBuyers = async (req, res, next) => {
   try {
     const supplierId = req.user.id;
 
-    // Orders වලින් buyers (supermarkets) list එක aggregate කරගන්නවා
+    // Orders buyers (supermarkets)  
     const buyers = await Order.aggregate([
       { $match: { supplier: require("mongoose").Types.ObjectId.createFromHexString(supplierId) } },
       {

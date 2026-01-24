@@ -11,7 +11,11 @@
     "jspdf": "^4.0.0",
     "jspdf-autotable": "^5.0.7",
     "leaflet": "^1.9.4",
+<<<<<<< HEAD
     "lucide-react": "^0.563.0",
+=======
+    "lucide-react": "^0.562.0",
+>>>>>>> 8fafe79db4b02affdff4c28d81736d4c195cb9d1
     "multer": "^2.0.2",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
