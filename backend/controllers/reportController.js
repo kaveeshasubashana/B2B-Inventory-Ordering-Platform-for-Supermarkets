@@ -24,8 +24,8 @@ function getStatusMatch(req) {
 }
 
 /**
- * GET /api/reports/supplier/summary?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD&status=All|Pending|Confirmed|Delivered|Cancelled
- * Returns: totalOrders, totalRevenue, deliveredOrders, pendingOrders, cancelledOrders, confirmedOrders
+ * GET /api/reports/supplier/summary?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD&status=All|Pending|Accepted|Dispatched|Delivered|Rejected
+ * Returns: totalOrders, totalRevenue, deliveredOrders, pendingOrders, acceptedOrders, rejectedOrders
  */
 exports.getSupplierReportSummary = async (req, res) => {
   try {
@@ -50,14 +50,17 @@ exports.getSupplierReportSummary = async (req, res) => {
           pendingOrders: {
             $sum: { $cond: [{ $eq: ["$status", "Pending"] }, 1, 0] },
           },
-          confirmedOrders: {
-            $sum: { $cond: [{ $eq: ["$status", "Confirmed"] }, 1, 0] },
+          acceptedOrders: {
+            $sum: { $cond: [{ $eq: ["$status", "Accepted"] }, 1, 0] },
+          },
+          dispatchedOrders: {
+            $sum: { $cond: [{ $eq: ["$status", "Dispatched"] }, 1, 0] },
           },
           deliveredOrders: {
             $sum: { $cond: [{ $eq: ["$status", "Delivered"] }, 1, 0] },
           },
-          cancelledOrders: {
-            $sum: { $cond: [{ $eq: ["$status", "Cancelled"] }, 1, 0] },
+          rejectedOrders: {
+            $sum: { $cond: [{ $eq: ["$status", "Rejected"] }, 1, 0] },
           },
         },
       },
@@ -67,9 +70,10 @@ exports.getSupplierReportSummary = async (req, res) => {
           totalOrders: 1,
           totalRevenue: 1,
           pendingOrders: 1,
-          confirmedOrders: 1,
+          acceptedOrders: 1,
+          dispatchedOrders: 1,
           deliveredOrders: 1,
-          cancelledOrders: 1,
+          rejectedOrders: 1,
         },
       },
     ];
@@ -81,9 +85,10 @@ exports.getSupplierReportSummary = async (req, res) => {
         totalOrders: 0,
         totalRevenue: 0,
         pendingOrders: 0,
-        confirmedOrders: 0,
+        acceptedOrders: 0,
+        dispatchedOrders: 0,
         deliveredOrders: 0,
-        cancelledOrders: 0,
+        rejectedOrders: 0,
       }
     );
   } catch (err) {
@@ -127,24 +132,9 @@ exports.getSupplierRevenueOverTime = async (req, res) => {
       {
         $project: {
           _id: 0,
-          label:
-            granularity === "day"
-              ? {
-                  $concat: [
-                    { $toString: "$_id.y" },
-                    "-",
-                    { $toString: "$_id.m" },
-                    "-",
-                    { $toString: "$_id.d" },
-                  ],
-                }
-              : {
-                  $concat: [
-                    { $toString: "$_id.y" },
-                    "-",
-                    { $toString: "$_id.m" },
-                  ],
-                },
+          year: "$_id.y",
+          month: "$_id.m",
+          day: "$_id.d",
           revenue: 1,
           orders: 1,
         },
@@ -152,7 +142,18 @@ exports.getSupplierRevenueOverTime = async (req, res) => {
     ];
 
     const data = await Order.aggregate(pipeline);
-    res.json(data);
+    
+    // Format labels with month abbreviations
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const formatted = data.map(item => ({
+      label: granularity === "day" 
+        ? `${monthNames[item.month - 1]} ${item.day}`
+        : monthNames[item.month - 1],
+      revenue: item.revenue,
+      orders: item.orders,
+    }));
+    
+    res.json(formatted);
   } catch (err) {
     res.status(500).json({ message: "Failed to load revenue trend", error: err.message });
   }
@@ -182,8 +183,8 @@ exports.getSupplierOrdersByStatus = async (req, res) => {
 
     const data = await Order.aggregate(pipeline);
 
-    // Ensure all statuses exist even if 0
-    const all = ["Pending", "Confirmed", "Delivered", "Cancelled"];
+    // Ensure all statuses exist even if 0 - matches Order model enum
+    const all = ["Pending", "Accepted", "Dispatched", "Delivered", "Rejected"];
     const map = new Map(data.map((d) => [d.status, d.count]));
     const normalized = all.map((s) => ({ status: s, count: map.get(s) || 0 }));
 

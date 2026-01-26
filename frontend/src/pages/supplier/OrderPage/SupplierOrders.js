@@ -82,7 +82,7 @@ const SupplierOrders = () => {
         return "badge-dispatched";
       case "Delivered":
         return "badge-delivered";
-      case "Rejected":
+      case "Rejected":                                            
         return "badge-rejected";
       default:
         return "";
@@ -185,7 +185,7 @@ const SupplierOrders = () => {
                   {filteredOrders.length > 0 ? (
                     filteredOrders.map((order) => (
                       <tr key={order._id}>
-                        <td className="id-cell">...{order._id.slice(-6)}</td>
+                        <td className="id-cell">#{order._id.slice(-6)}</td>
                         <td>{order.supermarket?.name}</td>
                         <td>
                           {new Date(order.createdAt).toLocaleDateString()}

@@ -26,109 +26,198 @@
   line-height: 1.6;
 }
 
-/* Stats Cards - Enhanced with subtle backgrounds */
+/* Stats Cards - Modern Gradient Design */
 .buyers-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   margin-bottom: 32px;
 }
 
-.bcard {
-  background: white;
-  border-radius: 16px;
-  padding: 28px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+@media (max-width: 1100px) {
+  .buyers-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.bcard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  opacity: 0.05;
-  transition: all 0.3s;
+@media (max-width: 700px) {
+  .buyers-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bcard {
+  border-radius: 20px;
+  padding: 24px 28px;
+  position: relative;
+  overflow: hidden;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
 }
 
 .bcard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-  border-color: #cbd5e1;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
-.bcard.purple::before {
-  background: #8b5cf6;
+/* Green gradient card */
+.bcard.green {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
 }
 
-.bcard.blue::before {
-  background: #3b82f6;
+/* Blue gradient card */
+.bcard.blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
 }
 
-.bcard.green::before {
-  background: #10b981;
+/* White/Light card */
+.bcard.white {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
 }
 
-.bcard-left {
+/* Decorative circles */
+.bcard::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+.bcard::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  right: 40px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.bcard.white::before {
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.bcard.white::after {
+  background: rgba(16, 185, 129, 0.03);
+}
+
+.bcard-top {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
   z-index: 1;
-}
-
-.bcard-label {
-  font-size: 13px;
-  color: #64748b;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-
-.bcard-value {
-  font-size: 36px;
-  font-weight: 700;
-  color: #0f172a;
-  line-height: 1;
 }
 
 .bcard-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  z-index: 1;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
   transition: transform 0.3s;
 }
 
 .bcard:hover .bcard-icon {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.1);
 }
 
-.bcard-icon.purple {
-  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-  color: #8b5cf6;
+.bcard.white .bcard-icon {
+  background: #ecfdf5;
 }
 
-.bcard-icon.blue {
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  color: #3b82f6;
+.bcard-icon svg {
+  width: 22px;
+  height: 22px;
 }
 
-.bcard-icon.green {
-  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+.bcard.green .bcard-icon svg,
+.bcard.blue .bcard-icon svg {
+  color: #fff;
+}
+
+.bcard.white .bcard-icon svg {
   color: #10b981;
+}
+
+.bcard-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.bcard.white .bcard-check {
+  background: #f0fdf4;
+}
+
+.bcard-check svg {
+  width: 14px;
+  height: 14px;
+}
+
+.bcard.green .bcard-check svg,
+.bcard.blue .bcard-check svg {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.bcard.white .bcard-check svg {
+  color: #10b981;
+}
+
+.bcard-content {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+}
+
+.bcard-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.bcard.green .bcard-label,
+.bcard.blue .bcard-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.bcard.white .bcard-label {
+  color: #64748b;
+}
+
+.bcard-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.bcard.green .bcard-value,
+.bcard.blue .bcard-value {
+  color: #fff;
+}
+
+.bcard.white .bcard-value {
+  color: #0f172a;
 }
 
 /* Main Grid Layout */
@@ -542,6 +631,27 @@
 /* Map wrapper full height */
 .buyers-right .chart-card > div {
   height: 100%;
+}
+
+/* Custom Leaflet Popup Styles */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px !important;
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Map container hover cursor */
+.leaflet-interactive {
+  cursor: pointer !important;
 }
 
 /* (Optional) buyers grid balance */
