@@ -27,12 +27,35 @@ const Navbar = () => {
             <Link to="/" className="nav-link public-link">
               Home
             </Link>
-            <Link to="/about" className="nav-link public-link">
-              About
-            </Link>
-            <Link to="/contact" className="nav-link public-link">
-              Contact
-            </Link>
+            <Link
+  to="/"
+  className="nav-link public-link"
+  onClick={() => {
+    setTimeout(() => {
+      const section = document.getElementById("about");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  }}
+>
+  About
+</Link>
+<Link
+  to="/"
+  className="nav-link public-link"
+  onClick={() => {
+    setTimeout(() => {
+      const section = document.getElementById("contact");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  }}
+>
+  Contact
+</Link>
+
           </>
         )}
 

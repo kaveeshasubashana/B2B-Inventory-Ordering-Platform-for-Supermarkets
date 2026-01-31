@@ -6,7 +6,14 @@ import "./SupplierBuyers.css";
 import SriLankaLeafletMap from "../../../components/SriLankaLeafletMap";
 
 
+//Icons
 
+const SearchIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"></circle>
+    <path d="m21 21-4.35-4.35"></path>
+  </svg>
+);
 const money = (n = 0) =>
   `Rs. ${Number(n || 0).toLocaleString("en-LK", { maximumFractionDigits: 0 })}`;
 
@@ -186,28 +193,73 @@ const SupplierBuyers = () => {
 
           {/* Stats cards */}
           <div className="buyers-stats">
-            <div className="bcard purple">
-              <div className="bcard-left">
+            {/* Green Card - Total Supermarkets */}
+            <div className="bcard green">
+              <div className="bcard-top">
+                <div className="bcard-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 21h18"/>
+                    <path d="M5 21V7l8-4v18"/>
+                    <path d="M19 21V11l-6-4"/>
+                    <path d="M9 9v.01"/>
+                    <path d="M9 12v.01"/>
+                    <path d="M9 15v.01"/>
+                    <path d="M9 18v.01"/>
+                  </svg>
+                </div>
+                <div className="bcard-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="bcard-content">
                 <div className="bcard-label">Total Supermarkets</div>
                 <div className="bcard-value">{stats.totalSupermarkets}</div>
               </div>
-              <div className="bcard-icon purple">📦</div>
             </div>
 
+            {/* Blue Card - Total Orders */}
             <div className="bcard blue">
-              <div className="bcard-left">
+              <div className="bcard-top">
+                <div className="bcard-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                  </svg>
+                </div>
+                <div className="bcard-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="bcard-content">
                 <div className="bcard-label">Total Orders</div>
                 <div className="bcard-value">{stats.totalOrders}</div>
               </div>
-              <div className="bcard-icon blue">🛒</div>
             </div>
 
-            <div className="bcard green">
-              <div className="bcard-left">
-                <div className="bcard-label">Total Revenue</div>
-                <div className="bcard-value">{money(stats.totalRevenue)}</div>
+            {/* White Card - Total Revenue */}
+            <div className="bcard white">
+              <div className="bcard-top">
+                <div className="bcard-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                    <polyline points="17 6 23 6 23 12"/>
+                  </svg>
+                </div>
+                <div className="bcard-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
               </div>
-              <div className="bcard-icon green">✓</div>
+              <div className="bcard-content">
+                <div className="bcard-label">Total Revenue</div>
+                <div className="bcard-value">LKR {formatValue(stats.totalRevenue)}</div>
+              </div>
             </div>
           </div>
 
@@ -218,11 +270,11 @@ const SupplierBuyers = () => {
               {/* Filters */}
               <div className="buyers-filters">
                 <div className="buyers-search">
-                  <span className="icon">🔍</span>
+                  <SearchIcon /> 
                   <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search supermarkets..."
+                    placeholder="    Search supermarkets..."
                   />
                 </div>
 

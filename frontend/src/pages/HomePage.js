@@ -14,7 +14,7 @@ const HomePage = () => {
     <>
       <div className="home-container">
         <div className="home-left">
-          <h1>Welcome to the Inventory Management System</h1>
+          <h1>Welcome to the Inventory Ordering System</h1>
           <p>Admin, Suppliers, and Supermarkets in one simple system.</p>
 
           {!user && (

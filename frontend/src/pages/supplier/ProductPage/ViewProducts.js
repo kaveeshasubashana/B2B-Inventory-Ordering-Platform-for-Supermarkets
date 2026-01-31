@@ -18,6 +18,7 @@ const ViewProducts = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [file, setFile] = useState(null);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -129,6 +130,8 @@ const ViewProducts = () => {
       formDataToSend.append("stock", formData.stock);
       formDataToSend.append("category", formData.category);
 
+      
+
       if (file) {
         formDataToSend.append("image", file);
       } else if (formData.image) {
@@ -150,7 +153,7 @@ const ViewProducts = () => {
       console.error("Error saving product:", error);
       alert(
         "Error saving product: " +
-          (error.response?.data?.message || "Please try again.")
+          (error.response?.data?.message || "Please try again."),
       );
     } finally {
       setFormLoading(false);
@@ -187,7 +190,7 @@ const ViewProducts = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedProducts = filteredProducts.slice(
     startIndex,
-    startIndex + itemsPerPage
+    startIndex + itemsPerPage,
   );
 
   const formatDate = (dateString) => {
@@ -201,16 +204,12 @@ const ViewProducts = () => {
 
   const generateProductId = (index) => `2L${3500 - (startIndex + index) * 100}`;
 
-  // filter clear option
   const clearAllFilters = () => {
     setCategoryFilter("all");
     setStatusFilter("all");
     setSearchTerm("");
     setCurrentPage(1);
   };
-
-  // watch whre we slect in the filter
-  const isFilterActive = categoryFilter !== "all" || statusFilter !== "all";
 
   return (
     <div className="supplier-layout">
@@ -219,7 +218,6 @@ const ViewProducts = () => {
         <SupplierTopbar />
         <div className="view-products-page">
           <h1 className="page-title">Products</h1>
-        
 
           <div className="products-toolbar">
             <div className="toolbar-left">
@@ -309,7 +307,6 @@ const ViewProducts = () => {
                         <option value="out-of-stock">Out of Stock</option>
                       </select>
                     </div>
-                    {/* add Buton for filter dropdown */}
                     <button
                       className="reset-filter-link"
                       onClick={clearAllFilters}
@@ -321,21 +318,7 @@ const ViewProducts = () => {
               </div>
             </div>
             <div className="toolbar-right">
-              <button className="import-btn">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
-                Import
-              </button>
+             
               <button className="add-btn" onClick={openAddModal}>
                 + Add new product
               </button>
@@ -358,6 +341,7 @@ const ViewProducts = () => {
                     <th>Price</th>
                     <th>Status</th>
                     <th>Category</th>
+                    {/* District removed from table view since it is implied */}
                     <th>Stock</th>
                     <th>Update</th>
                     <th className="action-head">Action</th>
@@ -420,10 +404,8 @@ const ViewProducts = () => {
                         {formatDate(product.updatedAt || product.createdAt)}
                       </td>
 
-                      {/* --- THIS IS THE UPDATED ACTION CELL --- */}
                       <td className="action-cell" data-label="Action">
                         <div className="action-buttons">
-                          {/* View / Info Icon */}
                           <button
                             className="action-btn view"
                             title="View Details"
@@ -444,7 +426,6 @@ const ViewProducts = () => {
                             </svg>
                           </button>
 
-                          {/* Edit Icon */}
                           <button
                             className="action-btn edit"
                             onClick={() => openEditModal(product)}
@@ -465,7 +446,6 @@ const ViewProducts = () => {
                             </svg>
                           </button>
 
-                          {/* Delete Icon */}
                           <button
                             className="action-btn delete"
                             onClick={() => handleDelete(product._id)}
@@ -487,7 +467,6 @@ const ViewProducts = () => {
                           </button>
                         </div>
                       </td>
-                      {/* ------------------------------------- */}
                     </tr>
                   ))}
                 </tbody>
@@ -499,11 +478,9 @@ const ViewProducts = () => {
               )}
             </div>
           ) : (
-            /* Grid View Logic remains same but uses new classNames */
             <div className="products-grid">
               {paginatedProducts.map((product) => (
                 <div key={product._id} className="product-card">
-                  {/* ... Same as your existing Grid Code ... */}
                   <div className="card-image">
                     {product.image ? (
                       <img
@@ -536,7 +513,6 @@ const ViewProducts = () => {
 
           {totalPages > 1 && (
             <div className="pagination">
-              {/* Pagination logic remains same */}
               <button
                 className="page-btn"
                 disabled={currentPage === 1}
@@ -544,7 +520,6 @@ const ViewProducts = () => {
               >
                 ‹
               </button>
-              {/* ... etc ... */}
               <button
                 className="page-btn"
                 disabled={currentPage === totalPages}
@@ -556,7 +531,7 @@ const ViewProducts = () => {
           )}
         </div>
       </div>
-      {/* Modal Code remains same... */}
+
       {showModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="product-modal" onClick={(e) => e.stopPropagation()}>
@@ -576,7 +551,6 @@ const ViewProducts = () => {
               </button>
             </div>
             <form onSubmit={handleSubmit} className="modal-form">
-              {/* Form inputs same as before */}
               <div className="form-group">
                 <label>Product Name</label>
                 <input
@@ -587,7 +561,9 @@ const ViewProducts = () => {
                   required
                 />
               </div>
-              {/* ... other inputs ... */}
+
+              {/* District Input */}
+
               <div className="form-group">
                 <label>Category</label>
                 <select

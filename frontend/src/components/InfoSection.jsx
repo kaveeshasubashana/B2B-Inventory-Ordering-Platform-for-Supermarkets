@@ -3,7 +3,7 @@ import "./InfoSection.css";
 
 const InfoSection = () => {
   return (
-    <section className="info-section">
+    <section className="info-section" id="about">
       <h2>How BridgeMart Works</h2>
       <p className="info-subtitle">
         A simple B2B platform designed to streamline inventory and business
