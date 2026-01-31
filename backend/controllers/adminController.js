@@ -117,14 +117,31 @@ const getStats = async (req, res) => {
 /* =========================
    GET USERS
 ========================= */
+/* =========================
+   GET USERS (WITH FILTERS) ✅ FIXED
+========================= */
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const { role, status } = req.query;
+    const filter = {};
+
+    // 🎭 Role filter
+    if (role && ["admin", "supplier", "supermarket"].includes(role)) {
+      filter.role = role;
+    }
+
+    // ✅ Status filter
+    if (status === "approved") filter.isApproved = true;
+    if (status === "pending") filter.isApproved = false;
+
+    const users = await User.find(filter).select("-password");
     res.json(users);
   } catch (error) {
+    console.error("getUsers error:", error);
     res.status(500).json({ message: "Failed to load users" });
   }
 };
+
 
 /* =========================
    USERS CSV REPORT ✅ FIXED

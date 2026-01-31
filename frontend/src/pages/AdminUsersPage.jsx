@@ -15,8 +15,15 @@ const AdminUsersPage = () => {
       setError("");
 
       const params = {};
-      if (roleFilter) params.role = roleFilter;
-      if (statusFilter && statusFilter !== "all") params.status = statusFilter;
+
+if (roleFilter !== "all") {
+  params.role = roleFilter;
+}
+
+if (statusFilter !== "all") {
+  params.status = statusFilter;
+}
+
 
       const res = await api.get("/admin/users", { params });
       setUsers(res.data);
@@ -92,14 +99,11 @@ const AdminUsersPage = () => {
       <div className="admin-filter-row">
         <div>
           <label>Role:</label>
-          <select
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-          >
-            <option value="supplier">Supplier</option>
-            <option value="supermarket">Supermarket</option>
-            <option value="admin">Admin</option>
-          </select>
+          <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
+  <option value="supplier">Supplier</option>
+  <option value="supermarket">Supermarket</option>
+  <option value="all">All</option>
+</select>
         </div>
 
         <div>
