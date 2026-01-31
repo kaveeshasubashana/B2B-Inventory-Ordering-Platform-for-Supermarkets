@@ -51,24 +51,29 @@ const getMyProducts = async (req, res, next) => {
 };
 
 // 3. SUPERMARKET: Get All Products (by district)
+// 3. SUPERMARKET: Get All Products (by district)
 const getAllProducts = async (req, res, next) => {
   try {
-    const q = {
+    const products = await Product.find({
       isActive: true,
       district: req.user.district,
-    };
-
-    if (req.query.category) q.category = req.query.category;
-
-    const products = await Product.find(q)
-      .populate("supplier", "name email district")
+    })
+      .populate({
+        path: "supplier",
+        match: { isActive: true }, // ✅ hide deleted / inactive suppliers
+        select: "name email district",
+      })
       .sort({ createdAt: -1 });
 
-    res.json(products);
+    // ✅ remove products whose supplier no longer exists
+    const filtered = products.filter((p) => p.supplier);
+
+    res.json(filtered);
   } catch (err) {
     next(err);
   }
 };
+
 
 // 4. GET PRODUCT BY ID
 const getProductById = async (req, res, next) => {

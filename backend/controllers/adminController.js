@@ -1,4 +1,6 @@
+// backend/controllers/adminController.js
 const User = require("../models/User");
+const Product = require("../models/Product");
 
 /* =========================
    GET PENDING USERS
@@ -8,7 +10,6 @@ const getPendingUsers = async (req, res) => {
     const users = await User.find({ isApproved: false }).select("-password");
     res.json(users);
   } catch (error) {
-    console.error("getPendingUsers error:", error);
     res.status(500).json({ message: "Failed to load pending users" });
   }
 };
@@ -18,30 +19,15 @@ const getPendingUsers = async (req, res) => {
 ========================= */
 const approveUser = async (req, res) => {
   try {
-    const { userId } = req.params;
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     user.isApproved = true;
     user.isActive = true;
     await user.save();
 
-    res.json({
-      message: "User approved successfully",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        isApproved: user.isApproved,
-        isActive: user.isActive,
-      },
-    });
+    res.json({ message: "User approved successfully" });
   } catch (error) {
-    console.error("approveUser error:", error);
     res.status(500).json({ message: "Failed to approve user" });
   }
 };
@@ -51,23 +37,12 @@ const approveUser = async (req, res) => {
 ========================= */
 const rejectUser = async (req, res) => {
   try {
-    const { userId } = req.params;
-
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (user.role === "admin") {
-      return res
-        .status(400)
-        .json({ message: "Cannot reject admin user" });
-    }
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     await user.deleteOne();
     res.json({ message: "User rejected and removed" });
   } catch (error) {
-    console.error("rejectUser error:", error);
     res.status(500).json({ message: "Failed to reject user" });
   }
 };
@@ -77,26 +52,10 @@ const rejectUser = async (req, res) => {
 ========================= */
 const deactivateUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (user.role === "admin") {
-      return res
-        .status(400)
-        .json({ message: "Admin cannot be deactivated" });
-    }
-
-    await User.updateOne(
-      { _id: req.params.id },
-      { $set: { isActive: false } }
-    );
-
-    res.json({ message: "User access removed successfully" });
+    await User.findByIdAndUpdate(req.params.id, { isActive: false });
+    res.json({ message: "User deactivated" });
   } catch (error) {
-    console.error("deactivateUser error:", error);
-    res.status(500).json({ message: "Failed to remove user access" });
+    res.status(500).json({ message: "Failed to deactivate user" });
   }
 };
 
@@ -105,48 +64,30 @@ const deactivateUser = async (req, res) => {
 ========================= */
 const activateUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    await User.updateOne(
-      { _id: req.params.id },
-      { $set: { isActive: true } }
-    );
-
-    res.json({ message: "User re-activated successfully" });
+    await User.findByIdAndUpdate(req.params.id, { isActive: true });
+    res.json({ message: "User activated" });
   } catch (error) {
-    console.error("activateUser error:", error);
     res.status(500).json({ message: "Failed to activate user" });
   }
 };
 
 /* =========================
-   PERMANENT DELETE USER 🔥
+   DELETE USER PERMANENTLY
 ========================= */
 const deleteUserPermanently = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    if (user.role === "supplier") {
+      // 🔥 REMOVE ALL PRODUCTS OF SUPPLIER
+      await Product.deleteMany({ supplier: user._id });
     }
 
-    // ❗ Extra safety: prevent deleting admins
-    if (user.role === "admin") {
-      return res
-        .status(403)
-        .json({ message: "Cannot delete admin users" });
-    }
-
-    await User.findByIdAndDelete(userId);
-
+    await user.deleteOne();
     res.json({ message: "User permanently deleted" });
   } catch (error) {
-    console.error("deleteUserPermanently error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Failed to delete user" });
   }
 };
 
@@ -155,25 +96,15 @@ const deleteUserPermanently = async (req, res) => {
 ========================= */
 const getStats = async (req, res) => {
   try {
-    const totalUsers = await User.countDocuments();
-    const totalSuppliers = await User.countDocuments({ role: "supplier" });
-    const totalSupermarkets = await User.countDocuments({ role: "supermarket" });
-    const pendingUsers = await User.countDocuments({ isApproved: false });
-    const approvedUsers = await User.countDocuments({ isApproved: true });
-    const activeUsers = await User.countDocuments({ isActive: true });
-    const inactiveUsers = await User.countDocuments({ isActive: false });
-
-    res.json({
-      totalUsers,
-      totalSuppliers,
-      totalSupermarkets,
-      pendingUsers,
-      approvedUsers,
-      activeUsers,
-      inactiveUsers,
-    });
+    const stats = {
+      totalUsers: await User.countDocuments(),
+      suppliers: await User.countDocuments({ role: "supplier" }),
+      supermarkets: await User.countDocuments({ role: "supermarket" }),
+      activeUsers: await User.countDocuments({ isActive: true }),
+      inactiveUsers: await User.countDocuments({ isActive: false }),
+    };
+    res.json(stats);
   } catch (error) {
-    console.error("getStats error:", error);
     res.status(500).json({ message: "Failed to load stats" });
   }
 };
@@ -183,52 +114,35 @@ const getStats = async (req, res) => {
 ========================= */
 const getUsers = async (req, res) => {
   try {
-    const { role, status } = req.query;
-    const filter = {};
-
-    if (role && ["admin", "supplier", "supermarket"].includes(role)) {
-      filter.role = role;
-    }
-
-    if (status === "pending") filter.isApproved = false;
-    if (status === "approved") filter.isApproved = true;
-    if (status === "active") filter.isActive = true;
-    if (status === "inactive") filter.isActive = false;
-
-    const users = await User.find(filter).select("-password");
+    const users = await User.find().select("-password");
     res.json(users);
   } catch (error) {
-    console.error("getUsers error:", error);
     res.status(500).json({ message: "Failed to load users" });
   }
 };
 
 /* =========================
-   USERS CSV REPORT
+   USERS CSV REPORT ✅ FIXED
 ========================= */
 const getUsersReport = async (req, res) => {
   try {
     const users = await User.find().select("-password");
 
-    let csv = "Name,Email,Role,Approved,Active,Created At\n";
-
-    users.forEach((u) => {
-      csv += `"${u.name}","${u.email}",${u.role},${
-        u.isApproved ? "Yes" : "No"
-      },${u.isActive ? "Yes" : "No"},${u.createdAt.toISOString()}\n`;
+    let csv = "Name,Email,Role,Approved,Active\n";
+    users.forEach(u => {
+      csv += `${u.name},${u.email},${u.role},${u.isApproved},${u.isActive}\n`;
     });
 
     res.header("Content-Type", "text/csv");
     res.attachment("users-report.csv");
     res.send(csv);
   } catch (error) {
-    console.error("getUsersReport error:", error);
     res.status(500).json({ message: "Failed to generate report" });
   }
 };
 
 /* =========================
-   EXPORTS
+   EXPORTS ✅ VERY IMPORTANT
 ========================= */
 module.exports = {
   getPendingUsers,
@@ -239,5 +153,5 @@ module.exports = {
   deleteUserPermanently,
   getStats,
   getUsers,
-  getUsersReport,
+  getUsersReport, // ✅ MUST EXIST
 };
