@@ -52,7 +52,10 @@ const MainLayout = () => {
 //  This controls footer visibility based on route
 const AppRoutes = () => {
   const location = useLocation();
-  const hideFooter = location.pathname.startsWith("/supplier");
+  const hideFooter =
+  location.pathname.startsWith("/supplier") ||
+  location.pathname.startsWith("/supermarket");
+
 
   return (
     <>
