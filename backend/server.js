@@ -18,6 +18,11 @@ const reportRoutes = require("./routes/reportRoutes");
 // Middleware
 const errorHandler = require("./middleware/errorMiddleware");
 
+
+const contactRoutes = require("./routes/contactRoutes");
+
+
+
 // Load env variables
 dotenv.config();
 
@@ -46,6 +51,9 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/supermarkets", supermarketRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/contact", contactRoutes);
+
+
 
 // ===============================
 // HEALTH CHECK
