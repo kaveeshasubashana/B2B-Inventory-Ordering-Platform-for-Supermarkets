@@ -96,14 +96,19 @@ const deleteUserPermanently = async (req, res) => {
 ========================= */
 const getStats = async (req, res) => {
   try {
-    const stats = {
-      totalUsers: await User.countDocuments(),
-      suppliers: await User.countDocuments({ role: "supplier" }),
-      supermarkets: await User.countDocuments({ role: "supermarket" }),
-      activeUsers: await User.countDocuments({ isActive: true }),
-      inactiveUsers: await User.countDocuments({ isActive: false }),
-    };
-    res.json(stats);
+    const totalUsers = await User.countDocuments();
+    const totalSuppliers = await User.countDocuments({ role: "supplier" });
+    const totalSupermarkets = await User.countDocuments({ role: "supermarket" });
+    const pendingUsers = await User.countDocuments({ isApproved: false });
+    const approvedUsers = await User.countDocuments({ isApproved: true });
+
+    res.json({
+      totalUsers,
+      totalSuppliers,
+      totalSupermarkets,
+      pendingUsers,
+      approvedUsers,
+    });
   } catch (error) {
     res.status(500).json({ message: "Failed to load stats" });
   }
