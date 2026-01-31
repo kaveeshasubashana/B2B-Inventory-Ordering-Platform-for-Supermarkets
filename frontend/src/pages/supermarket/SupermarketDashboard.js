@@ -163,6 +163,15 @@ export default function SupermarketDashboard() {
     }));
 
   // --------- CART actions ----------
+const removeFromCart = (productId) => {
+  setCart((prev) =>
+    prev.filter((x) => x.product?._id !== productId)
+  );
+};
+
+
+
+
  const addToCart = (product) => {
   const stock = Number(product.stock || 0);
   if (stock <= 0) return alert("❌ Out of stock!");
@@ -369,11 +378,40 @@ export default function SupermarketDashboard() {
               <>
                 <div style={styles.cartTable}>
                   {cart.map((x) => (
-                    <div key={x.product._id} style={styles.cartItemRow}>
-                      <div style={{ flex: 1 }}><div style={{ fontWeight: 800 }}>{x.product.name}</div><div style={{ color: "#94a3b8", fontSize: 12 }}>{fmtLKR(x.product.price)} each</div></div>
-                      <input style={styles.cartQty} type="number" min={1} max={x.product.stock} value={x.qty} onChange={(e) => updateCartQty(x.product._id, e.target.value, x.product.stock)} />
-                    </div>
-                  ))}
+  <div key={x.product._id} style={styles.cartItemRow}>
+    <div style={{ flex: 1 }}>
+      <div style={{ fontWeight: 800 }}>{x.product.name}</div>
+      <div style={{ color: "#94a3b8", fontSize: 12 }}>
+        {fmtLKR(x.product.price)} each
+      </div>
+    </div>
+
+    <input
+      style={styles.cartQty}
+      type="number"
+      min={1}
+      max={x.product.stock}
+      value={x.qty}
+      onChange={(e) =>
+        updateCartQty(
+          x.product._id,
+          e.target.value,
+          x.product.stock
+        )
+      }
+    />
+
+    {/* ✅ REMOVE BUTTON */}
+    <button
+      onClick={() => removeFromCart(x.product._id)}
+      style={styles.removeBtn}
+      title="Remove item"
+    >
+      ✕
+    </button>
+  </div>
+))}
+
                 </div>
 
                 <div style={styles.formGroup}>
@@ -503,5 +541,20 @@ const styles = {
   input: { width: "100%", height: 42, borderRadius: 8, border: "1px solid #374151", background: "#0b1220", color: "#e5e7eb", padding: "0 12px", outline: "none" },
   modalFoot: { padding: 20, display: "flex", justifyContent: "space-between", gap: 12, borderTop: "1px solid #374151", background: '#1f2937' },
   payBtn: { flex: 1, padding: 10, borderRadius: 8, color: 'white', cursor: 'pointer', fontWeight: 600, transition: 'background 0.2s', fontSize: 13 },
-  cardForm: { background: 'rgba(255,255,255,0.05)', padding: 15, borderRadius: 8, marginBottom: 15, margin: '0 20px', border: '1px solid #374151' }
+  cardForm: { background: 'rgba(255,255,255,0.05)', padding: 15, borderRadius: 8, marginBottom: 15, margin: '0 20px', border: '1px solid #374151' },
+  removeBtn: {
+    background: "transparent",
+    border: "1px solid #374151",
+    color: "#ef4444",
+    width: 32,
+    height: 32,
+    borderRadius: 6,
+    cursor: "pointer",
+    fontSize: 16,
+    fontWeight: 700,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
 };
