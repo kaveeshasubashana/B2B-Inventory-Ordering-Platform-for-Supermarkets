@@ -16,8 +16,6 @@ import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-
-
 import PendingApprovalPage from "./pages/PendingApprovalPage";
 
 // Admin Pages
@@ -25,19 +23,18 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminPendingUsersPage from "./pages/AdminPendingUsersPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 
-//  Supplier Pages (Updated Paths based on Folder Structure)
+// Supplier Pages
 import SupplierDashboard from "./pages/supplier/DashboardPage/SupplierDashboard";
 import SupplierOrders from "./pages/supplier/OrderPage/SupplierOrders";
 import ViewProducts from "./pages/supplier/ProductPage/ViewProducts";
 import SupplierBuyers from "./pages/supplier/SupplierBuyers/SupplierBuyers";
 import SupplierReports from "./pages/supplier/Reports/SupplierReports";
 
-//  Supermarket Pages (Updated Paths based on Folder Structure)
+// Supermarket Pages
 import SupermarketDashboard from "./pages/supermarket/SupermarketDashboard";
 import SupermarketMyOrders from "./pages/supermarket/SupermarketMyOrders";
 
-// Layout to hide Navbar for specific roles if needed,
-// currently used for general pages
+// Layout with Navbar
 const MainLayout = () => {
   return (
     <>
@@ -49,28 +46,28 @@ const MainLayout = () => {
   );
 };
 
-//  This controls footer visibility based on route
+// Routes + Footer control
 const AppRoutes = () => {
   const location = useLocation();
-  const hideFooter =
-  location.pathname.startsWith("/supplier") ||
-  location.pathname.startsWith("/supermarket");
 
+  // ✅ HIDE footer for supplier, supermarket AND admin
+  const hideFooter =
+    location.pathname.startsWith("/supplier") ||
+    location.pathname.startsWith("/supermarket") ||
+    location.pathname.startsWith("/admin");
 
   return (
     <>
       <Routes>
-        {/* --- Routes with Navbar --- */}
+        {/* Routes WITH navbar */}
         <Route element={<MainLayout />}>
-          {/* Public Routes */}
+          {/* Public */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/pending" element={<PendingApprovalPage />} />
-          
-         
 
-          {/* 🔐 Admin-only routes */}
+          {/* 🔐 Admin */}
           <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route
@@ -80,14 +77,12 @@ const AppRoutes = () => {
             <Route path="/admin/users" element={<AdminUsersPage />} />
           </Route>
 
-          {/* 🔐 Supermarket-only routes */}
+          {/* 🔐 Supermarket */}
           <Route element={<PrivateRoute allowedRoles={["supermarket"]} />}>
-            {/* Dashboard */}
             <Route
               path="/supermarket/dashboard"
               element={<SupermarketDashboard />}
             />
-            {/*  New: My Orders & Invoice Tracking */}
             <Route
               path="/supermarket/my-orders"
               element={<SupermarketMyOrders />}
@@ -98,7 +93,7 @@ const AppRoutes = () => {
           <Route path="*" element={<HomePage />} />
         </Route>
 
-        {/* ---------- SUPPLIER AREA (NO NAVBAR / Custom Sidebar) ---------- */}
+        {/* SUPPLIER AREA (no navbar, no footer) */}
         <Route element={<PrivateRoute allowedRoles={["supplier"]} />}>
           <Route path="/supplier/dashboard" element={<SupplierDashboard />} />
           <Route path="/supplier/products" element={<ViewProducts />} />
@@ -108,7 +103,7 @@ const AppRoutes = () => {
         </Route>
       </Routes>
 
-      {/*  Footer hidden ONLY on /supplier routes */}
+      {/* ✅ Footer hidden for admin, supplier, supermarket */}
       {!hideFooter && <Footer />}
     </>
   );
