@@ -16,8 +16,8 @@ import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import ContactPage from "./pages/ContactPage";
-import AboutPage from "./pages/AboutPage";
+
+
 import PendingApprovalPage from "./pages/PendingApprovalPage";
 
 // Admin Pages
@@ -64,8 +64,8 @@ const AppRoutes = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/pending" element={<PendingApprovalPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
+          
+         
 
           {/* 🔐 Admin-only routes */}
           <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
