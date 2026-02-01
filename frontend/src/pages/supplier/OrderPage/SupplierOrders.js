@@ -31,6 +31,20 @@ const SupplierOrders = () => {
     }
   };
 
+  //remove order from list (not delete)
+
+const removeFromList = (orderId) => {
+  const confirmRemove = window.confirm(
+    "Remove this order from your list?",
+  );
+  if (!confirmRemove) return;
+
+  setOrders((prev) => prev.filter((o) => o._id !== orderId));
+};
+
+
+
+
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
       console.log(`Updating Order: ${orderId} to ${newStatus}`);
@@ -200,11 +214,31 @@ const SupplierOrders = () => {
                           </span>
                         </td>
                         <td>
+                           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}></div>
                           <button
                             className="btn-icon"
                             onClick={() => setSelectedOrder(order)}
+                            style={{ marginRight: "30px" }}
                           >
                             View
+                          </button>
+
+                           {/* REMOVE BUTTON */}
+                          <button
+                            onClick={() => removeFromList(order._id)}
+                            title="Remove from list"
+                            style={{
+                              background: "transparent",
+                              border: "1px solid #ef4444",
+                              color: "#ef4444",
+                              width: 28,
+                              height: 28,
+                              borderRadius: 6,
+                              cursor: "pointer",
+                              fontWeight: 700,
+                            }}
+                          >
+                            ✕
                           </button>
                         </td>
                       </tr>
