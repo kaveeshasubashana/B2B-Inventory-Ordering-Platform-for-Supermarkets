@@ -9,6 +9,7 @@ const {
   getMyOrders,
   getOrderById,
   updateOrderStatus,
+  deleteOrder,
 } = require("../controllers/orderController");
 
 
@@ -30,6 +31,10 @@ router.get("/my", protect, authorizeRoles("supermarket"), getMyOrders);
 
 //  Supplier: list incoming orders
 router.get("/supplier", protect, authorizeRoles("supplier"), getSupplierOrders);
+
+// Supermarket: Delete order (history)
+router.delete("/:id", protect, authorizeRoles("supermarket"), deleteOrder);
+
 
 //  view order details
 router.get("/:id", protect, getOrderById);

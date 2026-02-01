@@ -215,10 +215,43 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+/**
+ * 6. Delete Order (Supermarket - Order History)
+ */
+const deleteOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid order id" });
+    }
+
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // 🔐 Only the supermarket who placed the order can delete it
+    if (order.supermarket.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to delete this order" });
+    }
+
+    await order.deleteOne();
+
+    res.json({ message: "Order deleted successfully" });
+  } catch (error) {
+    console.error("Delete order error:", error);
+    res.status(500).json({ message: "Failed to delete order" });
+  }
+};
+
+
 module.exports = {
   createOrder,
   getMyOrders,
   getSupplierOrders,
   getOrderById,
   updateOrderStatus,
+  deleteOrder, 
 };
