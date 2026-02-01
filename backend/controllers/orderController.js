@@ -187,10 +187,12 @@ const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    // 🔒 Supplier-only permission
     if (order.supplier.toString() !== req.user.id) {
       return res.status(403).json({ message: "Not authorized" });
     }
 
+    // 🔁 Status flow control
     const flow = {
       Pending: ["Accepted", "Rejected"],
       Accepted: ["Dispatched"],
@@ -205,7 +207,14 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
+    // ✅ UPDATE STATUS
     order.status = status;
+
+    // ✅ IMPORTANT FIX: Mark payment as PAID when Delivered
+    if (status === "Delivered") {
+      order.paymentStatus = "Paid";
+    }
+
     await order.save();
 
     res.json(order);
@@ -214,6 +223,8 @@ const updateOrderStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 /**
  * 6. Delete Order (Supermarket - Order History)
