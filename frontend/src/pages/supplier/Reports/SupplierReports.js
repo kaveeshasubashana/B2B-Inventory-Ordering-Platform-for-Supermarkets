@@ -309,7 +309,7 @@ export default function SupplierReports() {
           <div className="rep-head">
             <div>
               <div className="rep-title-wrapper">
-                <span className="rep-title-dot"></span>
+                
                 <h1 className="rep-title">Reports</h1>
               </div>
               <div className="rep-sub">Sales analytics overview</div>

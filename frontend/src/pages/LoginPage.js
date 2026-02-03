@@ -14,6 +14,7 @@ const LoginPage = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,6 +22,7 @@ const LoginPage = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
     try {
       const res = await api.post("/auth/login", formData);
       const { token, user } = res.data;
@@ -33,37 +35,51 @@ const LoginPage = () => {
       else if (user.role === "supermarket") navigate("/supermarket/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={onSubmit}>
-        <h2>Login</h2>
-        {error && <p className="auth-error">{error}</p>}
+        
 
-        <label>Email</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={onChange}
-          required
-        />
+        <h2>Welcome Back</h2>
+        <p className="auth-subtitle">Sign in to continue to your account</p>
 
-        <label>Password</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={onChange}
-          required
-        />
+        {error && <div className="auth-error">{error}</div>}
 
-        <button type="submit">Login</button>
+        <div className="form-group">
+          <label>Email Address</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={formData.email}
+            onChange={onChange}
+            required
+          />
+        </div>
 
-        <p>
-          Don't have an account? <Link to="/register">Register</Link>
+        <div className="form-group">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={onChange}
+            required
+          />
+        </div>
+
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "Signing in..." : "Sign In"}
+        </button>
+
+        <p className="auth-footer">
+          Don't have an account? <Link to="/register">Create Account</Link>
         </p>
       </form>
     </div>

@@ -1,86 +1,392 @@
 /* frontend/src/pages/HomePage.css */
 
-.home-container {
-  display: flex;
-  height: 100vh;
-  padding: 60px;
-  box-sizing: border-box;
-  background: linear-gradient(135deg, #f4f7ff, #0b37c6);
-  font-family: Arial, sans-serif;
+/* Hero Section */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 100px 0 80px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f1c2e 50%, #1a1a2e 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Left section */
-.home-left {
-  flex: 1;
+/* Background Decorations */
+.hero-bg-decoration {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.decoration-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.decoration-1 {
+  top: -160px;
+  right: -160px;
+  width: 320px;
+  height: 320px;
+  background: rgba(249, 115, 22, 0.1);
+}
+
+.decoration-2 {
+  bottom: -160px;
+  left: -160px;
+  width: 400px;
+  height: 400px;
+  background: rgba(249, 115, 22, 0.05);
+}
+
+/* Hero Container */
+.hero-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  min-height: calc(100vh - 180px);
+  position: relative;
+  z-index: 10;
+}
+
+/* Hero Left Content */
+.hero-left {
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
-.home-left h1 {
-  font-size: 38px;
-  color: #0f172a;
-  margin-bottom: 16px;
+/* Badge */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  width: fit-content;
+  margin-bottom: 24px;
 }
 
-.home-left p {
-  font-size: 16px;
-  color: #1e293b;
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #f97316;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.badge-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Hero Title */
+.hero-title {
+  font-size: 52px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+}
+
+.text-accent {
+  color: #f97316;
+}
+
+/* Hero Description */
+.hero-description {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
   margin-bottom: 32px;
+  max-width: 520px;
 }
 
-/* Buttons */
-.button-group {
+/* Benefits List */
+.hero-benefits {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
 }
 
-.btn {
-  min-width: 170px;
-  height: 52px;
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+}
+
+.benefit-icon {
+  width: 22px;
+  height: 22px;
+  color: #f97316;
+  flex-shrink: 0;
+}
+
+/* CTA Buttons */
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f97316;
+  color: white;
   font-size: 16px;
   font-weight: 600;
+  padding: 16px 32px;
+  border: none;
   border-radius: 10px;
   cursor: pointer;
-  border: none;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);
 }
 
-/* Login – Primary */
-.login-btn {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #000000;
+.btn-primary:hover {
+  background-color: #ea580c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
 }
 
-.login-btn:hover {
-  background: linear-gradient(135deg, #1d4ed8, #1e40af);
-  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.45);
+.btn-primary .arrow-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.btn-primary:hover .arrow-icon {
+  transform: translateX(4px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 16px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
 }
 
-/* Register – Secondary (modern soft look) */
-.register-btn {
-  background: rgba(255, 255, 255, 0.25);
-  color: #0f172a;
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(15, 23, 42, 0.15);
-}
-
-.register-btn:hover {
-  background: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  transform: translateY(-2px);
-}
-
-/* Right section */
-.home-right {
-  flex: 1;
+/* Hero Right - Image Section */
+.hero-right {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.home-right img {
-  width: 80%;
-  max-width: 420px;
+.hero-image-wrapper {
+  position: relative;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.hero-image {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 16px;
+  /* Remove shadow for transparent/illustrated images */
+}
+
+.hero-image-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(to top, rgba(249, 115, 22, 0.15), transparent);
+  pointer-events: none;
+}
+
+/* Stats Cards */
+.stats-card {
+  position: absolute;
+  background: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  animation: cardFloat 4s ease-in-out infinite;
+}
+
+.stats-card-left {
+  bottom: 40px;
+  left: -20px;
+  animation-delay: 0s;
+}
+
+.stats-card-right {
+  top: 40px;
+  right: -20px;
+  animation-delay: 2s;
+}
+
+@keyframes cardFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.stats-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f97316;
+  line-height: 1.2;
+}
+
+.stats-label {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    text-align: center;
+  }
+
+  .hero-left {
+    align-items: center;
+  }
+
+  .hero-title {
+    font-size: 42px;
+  }
+
+  .hero-description {
+    max-width: 600px;
+  }
+
+  .hero-benefits {
+    align-items: center;
+  }
+
+  .hero-cta {
+    justify-content: center;
+  }
+
+  .hero-right {
+    order: -1;
+  }
+
+  .hero-image {
+    max-width: 500px;
+  }
+
+  .stats-card-left {
+    left: 20px;
+    bottom: 20px;
+  }
+
+  .stats-card-right {
+    right: 20px;
+    top: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-section {
+    padding: 80px 0 60px;
+  }
+
+  .hero-container {
+    padding: 0 20px;
+    gap: 40px;
+  }
+
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .hero-description {
+    font-size: 16px;
+  }
+
+  .benefit-item {
+    font-size: 14px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 14px 24px;
+    font-size: 15px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .stats-card {
+    padding: 12px 16px;
+  }
+
+  .stats-number {
+    font-size: 22px;
+  }
+
+  .stats-label {
+    font-size: 12px;
+  }
+
+  .stats-card-left {
+    left: 10px;
+    bottom: 10px;
+  }
+
+  .stats-card-right {
+    right: 10px;
+    top: 10px;
+  }
 }

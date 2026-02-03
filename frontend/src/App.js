@@ -41,7 +41,7 @@ const MainLayout = () => {
   return (
     <>
       <Navbar />
-      <div className="container">
+      <div className="container" style={{ paddingTop: '70px' }}>
         <Outlet />
       </div>
     </>
