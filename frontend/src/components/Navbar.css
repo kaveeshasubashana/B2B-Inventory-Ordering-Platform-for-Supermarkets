@@ -1,0 +1,162 @@
+/* frontend/src/components/Navbar.css */
+
+.navbar {
+  height: 70px;
+  padding: 0 40px;
+  background: #7d95d0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  font-family: Arial, sans-serif;
+}
+
+/* BRAND — BIG TEXT (FIXED) */
+.navbar-brand a {
+  font-size: 22px;        /* ✅ ORIGINAL SIZE */
+  font-weight: bold;
+  color: #000000;
+  text-decoration: none;
+}
+
+/* Links container */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Navbar links ONLY (not brand) */
+.navbar-links a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 15px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+/* Home / About / Contact hover */
+.public-link:hover {
+  background-color: #f3f4f6;
+  color: #000000;
+}
+
+/* Logout */
+/* frontend/src/components/Navbar.css */
+
+.navbar {
+  height: 70px;
+  padding: 0 40px;
+  background: #7d95d0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  font-family: Arial, sans-serif;
+}
+
+/* BRAND — BIG TEXT (FIXED) */
+.navbar-brand a {
+  font-size: 22px;        /* ✅ ORIGINAL SIZE */
+  font-weight: bold;
+  color: #000000;
+  text-decoration: none;
+}
+
+/* Links container */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Navbar links ONLY (not brand) */
+.navbar-links a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 15px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+/* Home / About / Contact hover */
+.public-link:hover {
+  background-color: #f3f4f6;
+  color: #000000;
+}
+
+
+/* ✅ අලුත් Logout Button එකේ CSS මෙතැන් සිට */
+
+.Btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: rgb(255, 65, 65);
+}
+
+/* plus sign (Icon) */
+.sign {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign svg {
+  width: 17px;
+}
+
+.sign svg path {
+  fill: white;
+}
+
+/* text */
+.text {
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 600;
+  transition-duration: .3s;
+}
+
+/* hover effect on button width */
+.Btn:hover {
+  width: 125px;
+  border-radius: 40px;
+  transition-duration: .3s;
+}
+
+.Btn:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 20px;
+}
+
+/* hover effect button's text */
+.Btn:hover .text {
+  opacity: 1;
+  width: 80%;
+  transition-duration: .3s;
+  padding-right: 10px;
+}
+
+/* button click effect*/
+.Btn:active {
+  transform: translate(2px ,2px);
+}
