@@ -1,0 +1,164 @@
+/* PAGE */
+.profile-page {
+  min-height: 100vh;
+  padding: 40px;
+  background: radial-gradient(circle at top, #111827, #020617);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.profile-loading {
+  color: #9ca3af;
+  padding: 40px;
+}
+
+/* CARD */
+.profile-card {
+  background: linear-gradient(180deg, #1f2937, #111827);
+  border-radius: 18px;
+  padding: 28px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.55);
+}
+
+/* HEADER */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #22c55e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.profile-name {
+  margin: 0;
+  color: #ffffff;
+  font-size: 22px;
+}
+
+.profile-email {
+  margin: 4px 0 10px;
+  color: #cbd5f5;
+  font-size: 14px;
+}
+
+.profile-badges {
+  display: flex;
+  gap: 8px;
+}
+
+/* BADGES */
+.badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge-active {
+  background: #22c55e;
+  color: #022c22;
+}
+
+.badge-inactive {
+  background: #ef4444;
+  color: #fff;
+}
+
+.badge-approved {
+  background: #6366f1;
+  color: #eef2ff;
+}
+
+.badge-pending {
+  background: #f59e0b;
+  color: #3b1d06;
+}
+
+/* ============================= */
+/* QUICK STATS FIXED             */
+/* ============================= */
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.stat-box {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  padding: 16px;
+  /* Flex makes sure items stack correctly */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* LABEL */
+.stat-box .stat-label {
+  font-size: 11px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+/* VALUE - FIXED HERE */
+.stat-box .stat-value {
+  display: block;
+  font-size: 15px !important;   /* Force smaller font size */
+  font-weight: 600;
+  color: #ffffff !important;    /* Force White color */
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+}
+
+/* SECTIONS */
+.profile-section {
+  margin-top: 32px;
+}
+
+.section-title {
+  color: #ffffff;
+  font-size: 16px;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+/* ROWS */
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #334155;
+}
+
+.profile-label {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.profile-value {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+}

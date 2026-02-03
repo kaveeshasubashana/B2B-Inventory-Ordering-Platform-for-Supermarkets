@@ -547,6 +547,13 @@ function Header({ q, setQ, count, me, meLoading, cartCount, onCart }) {
           📦 My Orders
         </button>
 
+             <button
+  style={{ ...styles.cartBtn, background: "#0ea5e9" }}
+  onClick={() => navigate("/supermarket/profile")}
+>
+  👤 My Profile
+</button>
+
   
 
         <button className="hover-btn" style={styles.cartBtn} onClick={onCart}>🛒 Cart <b>({cartCount})</b></button>

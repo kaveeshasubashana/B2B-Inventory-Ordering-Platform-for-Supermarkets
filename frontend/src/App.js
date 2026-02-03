@@ -11,7 +11,7 @@ import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import UserProfile from "./pages/profile/UserProfile";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -93,7 +93,7 @@ const AppRoutes = () => {
 
           {/* Fallback */}
           <Route path="*" element={<HomePage />} />
-
+           <Route path="/supermarket/profile" element={<UserProfile />} />
           
         </Route>
 
@@ -104,6 +104,7 @@ const AppRoutes = () => {
           <Route path="/supplier/orders" element={<SupplierOrders />} />
           <Route path="/supplier/supermarkets" element={<SupplierBuyers />} />
           <Route path="/supplier/reports" element={<SupplierReports />} />
+          <Route path="/supplier/profile" element={<UserProfile />} />
         
         </Route>
       </Routes>
