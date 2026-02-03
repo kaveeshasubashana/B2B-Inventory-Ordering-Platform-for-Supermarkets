@@ -1,162 +1,281 @@
 /* frontend/src/components/Navbar.css */
 
+/* Main Navbar */
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #e5e7eb;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.navbar-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
   height: 70px;
-  padding: 0 40px;
-  background: #7d95d0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  font-family: Arial, sans-serif;
 }
 
-/* BRAND — BIG TEXT (FIXED) */
+/* Logo / Brand */
 .navbar-brand a {
-  font-size: 22px;        /* ✅ ORIGINAL SIZE */
-  font-weight: bold;
-  color: #000000;
-  text-decoration: none;
-}
-
-/* Links container */
-.navbar-links {
   display: flex;
   align-items: center;
-  gap: 18px;
-}
-
-/* Navbar links ONLY (not brand) */
-.navbar-links a {
+  gap: 12px;
   text-decoration: none;
-  color: #000000;
-  font-size: 15px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
-/* Home / About / Contact hover */
-.public-link:hover {
-  background-color: #f3f4f6;
-  color: #000000;
+.navbar-brand a:hover {
+  transform: scale(1.02);
 }
 
-/* Logout */
-/* frontend/src/components/Navbar.css */
-
-.navbar {
-  height: 70px;
-  padding: 0 40px;
-  background: #7d95d0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  font-family: Arial, sans-serif;
-}
-
-/* BRAND — BIG TEXT (FIXED) */
-.navbar-brand a {
-  font-size: 22px;        /* ✅ ORIGINAL SIZE */
-  font-weight: bold;
-  color: #000000;
-  text-decoration: none;
-}
-
-/* Links container */
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-
-/* Navbar links ONLY (not brand) */
-.navbar-links a {
-  text-decoration: none;
-  color: #000000;
-  font-size: 15px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
-}
-
-/* Home / About / Contact hover */
-.public-link:hover {
-  background-color: #f3f4f6;
-  color: #000000;
-}
-
-
-/* ✅ අලුත් Logout Button එකේ CSS මෙතැන් සිට */
-
-.Btn {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 45px;
-  height: 45px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition-duration: .3s;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
-  background-color: rgb(255, 65, 65);
-}
-
-/* plus sign (Icon) */
-.sign {
-  width: 100%;
-  transition-duration: .3s;
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: #f8fafc;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.sign svg {
-  width: 17px;
+.logo-icon svg {
+  width: 40px;
+  height: 40px;
 }
 
-.sign svg path {
+.brand-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e3a5f;
+  letter-spacing: -0.5px;
+}
+
+/* Desktop Navigation */
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 8px 4px;
+  transition: color 0.2s ease, transform 0.2s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #1e3a5f;
+  transform: translateY(-2px);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #f97316;
+  transition: width 0.2s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* CTA Buttons */
+.navbar-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-login {
+  text-decoration: none;
+  color: #1e3a5f;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-login:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.btn-get-started {
+  text-decoration: none;
+  background-color: #f97316;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(249, 115, 22, 0.3);
+}
+
+.btn-get-started:hover {
+  background-color: #ea580c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(249, 115, 22, 0.4);
+}
+
+/* Logout Button */
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ef4444;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+.btn-logout:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.logout-icon {
+  width: 16px;
+  height: 16px;
   fill: white;
 }
 
-/* text */
-.text {
-  position: absolute;
-  right: 0%;
-  width: 0%;
-  opacity: 0;
+/* Mobile Menu Button */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #1e3a5f;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+  padding: 16px 24px 24px;
+  background-color: white;
+  border-top: 1px solid #e5e7eb;
+}
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-nav-link {
+  text-decoration: none;
+  color: #64748b;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 0;
+  transition: color 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.mobile-nav-link:hover {
+  color: #1e3a5f;
+}
+
+.mobile-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-login-mobile {
+  text-decoration: none;
+  text-align: center;
+  color: #1e3a5f;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: #f1f5f9;
+  transition: background-color 0.2s ease;
+}
+
+.btn-login-mobile:hover {
+  background-color: #e2e8f0;
+}
+
+.btn-get-started-mobile {
+  text-decoration: none;
+  text-align: center;
+  background-color: #f97316;
   color: white;
-  font-size: 1.2em;
+  font-size: 15px;
   font-weight: 600;
-  transition-duration: .3s;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
 }
 
-/* hover effect on button width */
-.Btn:hover {
-  width: 125px;
-  border-radius: 40px;
-  transition-duration: .3s;
+.btn-get-started-mobile:hover {
+  background-color: #ea580c;
 }
 
-.Btn:hover .sign {
-  width: 30%;
-  transition-duration: .3s;
-  padding-left: 20px;
+.btn-logout-mobile {
+  background-color: #ef4444;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-/* hover effect button's text */
-.Btn:hover .text {
-  opacity: 1;
-  width: 80%;
-  transition-duration: .3s;
-  padding-right: 10px;
+.btn-logout-mobile:hover {
+  background-color: #dc2626;
 }
 
-/* button click effect*/
-.Btn:active {
-  transform: translate(2px ,2px);
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .navbar-nav {
+    display: none;
+  }
+
+  .navbar-cta {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
 }
+
+/* Removed global body padding - now handled by .main-content class */
