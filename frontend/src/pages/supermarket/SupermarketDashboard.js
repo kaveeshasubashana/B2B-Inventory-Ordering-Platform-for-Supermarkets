@@ -537,7 +537,8 @@ const styles = {
   controls: { display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" },
   select: { padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.10)", background: "#1e293b", color: "#e5e7eb", outline: "none", fontSize: 13 },
   resetBtn: { padding: "10px 16px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.12)", background: "transparent", color: "#e5e7eb", cursor: "pointer", fontSize: 13 },
-  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 },
+  // ✅ FIXED CSS ISSUE: Changed auto-fit to auto-fill to prevent stretching
+  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 20 },
   card: { borderRadius: 16, overflow: "hidden", border: "1px solid rgba(255,255,255,0.10)", background: "#111827", transition: "transform 0.2s" },
   imgWrap: { position: "relative", height: 180, background: "#1f2937" },
   img: { width: "100%", height: "100%", objectFit: "cover" },
