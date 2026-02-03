@@ -6,8 +6,6 @@ import "./SupplierBuyers.css";
 import SriLankaLeafletMap from "../../../components/SriLankaLeafletMap";
 
 
-//Icons
-
 const SearchIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="11" cy="11" r="8"></circle>
@@ -42,7 +40,6 @@ const SupplierBuyers = () => {
   const [page, setPage] = useState(1);
   const perPage = 6;
 
-  // Fetch buyers list from backend
   useEffect(() => {
     const load = async () => {
       try {
@@ -67,12 +64,11 @@ const SupplierBuyers = () => {
     buyers.forEach((b) => {
       if (!b?.district) return;
       const key = safeLower(b.district);
-      if (key && !map[key]) map[key] = b.district; // keep first seen "nice" value
+      if (key && !map[key]) map[key] = b.district;
     });
     return map;
   }, [buyers]);
 
-  // District list for dropdown
   const districts = useMemo(() => {
     const set = new Set();
     buyers.forEach((b) => {
@@ -81,7 +77,6 @@ const SupplierBuyers = () => {
     return ["all", ...Array.from(set).sort()];
   }, [buyers]);
 
-  // Filtered buyers (district matching is case-insensitive now ✅)
   const filtered = useMemo(() => {
     const q = safeLower(search);
     const selectedKey = safeLower(district);
@@ -102,7 +97,6 @@ const SupplierBuyers = () => {
     });
   }, [buyers, search, district]);
 
-  // Pagination
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   const pageSafe = Math.min(page, totalPages);
   const start = (pageSafe - 1) * perPage;
@@ -112,7 +106,6 @@ const SupplierBuyers = () => {
     setPage(1);
   }, [search, district]);
 
-  // Stats
   const stats = useMemo(() => {
     const totalSupermarkets = buyers.length;
     const totalOrders = buyers.reduce(
@@ -126,7 +119,6 @@ const SupplierBuyers = () => {
     return { totalSupermarkets, totalOrders, totalRevenue };
   }, [buyers]);
 
-  // Top districts chart data (by revenue)
   const topDistricts = useMemo(() => {
     const map = {};
     buyers.forEach((b) => {
@@ -140,7 +132,6 @@ const SupplierBuyers = () => {
       .slice(0, 4);
   }, [buyers]);
 
-  //  Map data: districtStats (keyed by lower-case district name)
   const districtStats = useMemo(() => {
     const out = {};
     buyers.forEach((b) => {
@@ -158,7 +149,6 @@ const SupplierBuyers = () => {
   const showingFrom = filtered.length === 0 ? 0 : start + 1;
   const showingTo = Math.min(start + perPage, filtered.length);
 
-  // Custom label renderer for bars
   const renderCustomLabel = (props) => {
     const { x, y, width, value } = props;
     return (
@@ -182,7 +172,6 @@ const SupplierBuyers = () => {
         <SupplierTopbar />
 
         <div className="buyers-page">
-          {/* Header */}
           <div className="buyers-header">
             <h1 className="buyers-title">Buyers / Supermarkets</h1>
             <p className="buyers-subtitle">
@@ -191,9 +180,7 @@ const SupplierBuyers = () => {
             </p>
           </div>
 
-          {/* Stats cards */}
           <div className="buyers-stats">
-            {/* Green Card - Total Supermarkets */}
             <div className="bcard green">
               <div className="bcard-top">
                 <div className="bcard-icon">
@@ -219,7 +206,6 @@ const SupplierBuyers = () => {
               </div>
             </div>
 
-            {/* Blue Card - Total Orders */}
             <div className="bcard blue">
               <div className="bcard-top">
                 <div className="bcard-icon">
@@ -241,7 +227,6 @@ const SupplierBuyers = () => {
               </div>
             </div>
 
-            {/* White Card - Total Revenue */}
             <div className="bcard white">
               <div className="bcard-top">
                 <div className="bcard-icon">
@@ -263,11 +248,8 @@ const SupplierBuyers = () => {
             </div>
           </div>
 
-          {/* Main grid */}
           <div className="buyers-grid">
-            {/* LEFT: Table */}
             <div className="buyers-left">
-              {/* Filters */}
               <div className="buyers-filters">
                 <div className="buyers-search">
                   <SearchIcon /> 
@@ -324,7 +306,6 @@ const SupplierBuyers = () => {
                           <th>CONTACT EMAIL</th>
                           <th>TOTAL ORDERS</th>
                           <th>TOTAL REVENUE</th>
-                          <th>VIEW</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -361,22 +342,11 @@ const SupplierBuyers = () => {
                               {Number(b.totalOrders || 0).toLocaleString()}
                             </td>
                             <td>{money(b.totalRevenue || 0)}</td>
-                            <td>
-                              <button
-                                className="view-btn"
-                                onClick={() => {
-                                  console.log(`View details for ${b.name}`);
-                                }}
-                              >
-                                View
-                              </button>
-                            </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
 
-                    {/* Pagination footer */}
                     <div className="buyers-footer">
                       <div className="buyers-range">
                         {showingFrom}-{showingTo} of {filtered.length}
@@ -407,9 +377,7 @@ const SupplierBuyers = () => {
               </div>
             </div>
 
-            {/* RIGHT: Map + Chart */}
             <div className="buyers-right">
-              {/* NEW: Leaflet Map card */}
               <div className="chart-card">
                 <div className="chart-title">Buyer Districts (Sri Lanka)</div>
 
@@ -420,11 +388,10 @@ const SupplierBuyers = () => {
                 ) : (
                   <>
                     <SriLankaLeafletMap
-                      height={Math.min(620, window.innerHeight * 0.6)}
+                      height={480}
                       districtStats={districtStats}
                       selectedDistrict={district}
                       onSelectDistrict={(clickedDistrictName) => {
-                        // convert clicked district to canonical district from buyer list if possible
                         const key = safeLower(clickedDistrictName);
                         const canonical =
                           districtCanonicalMap[key] || clickedDistrictName;
@@ -436,7 +403,6 @@ const SupplierBuyers = () => {
                       Click a district to filter the table.
                     </p>
 
-                    {/* quick reset button */}
                     {district !== "all" && (
                       <button
                         className="pg-btn"

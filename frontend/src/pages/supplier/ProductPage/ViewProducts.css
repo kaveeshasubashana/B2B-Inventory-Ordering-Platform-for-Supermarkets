@@ -1,11 +1,11 @@
 :root{
-  --sidebar-w: 240px; /* change if your sidebar width is not 240px */
-  --topbar-h: 70px;   /* change if your topbar height differs */
+  --sidebar-w: 240px;
+  --topbar-h: 70px;
 }
 
 .view-products-page {
   padding: 24px;
-  background-color: #f8fafc; /* Light grey background */
+  background-color: #f8fafc;
   min-height: calc(100vh - 70px);
   width: 100%;
   box-sizing: border-box;
@@ -19,7 +19,6 @@
   margin: 0 0 24px 0;
 }
 
-/* --- Toolbar --- */
 .products-toolbar {
   display: flex;
   justify-content: space-between;
@@ -35,7 +34,6 @@
   gap: 12px;
 }
 
-/* Buttons */
 .view-btn, .filter-btn, .import-btn {
   display: flex;
   align-items: center;
@@ -114,10 +112,6 @@
   outline: none;
 }
 
-/* --- Table (List View) --- */
-
-
-
 .products-table-container {
   overflow-x: auto;
   width: 100%;
@@ -190,7 +184,6 @@
   text-align: center;
 }
 
-/*  */
 .clear-text-btn {
   background: none;
   border: none;
@@ -235,7 +228,6 @@
 .category-tag { color: #3b82f6; font-weight: 500; font-size: 13px; }
 
 
-/* --- Table Actions  --- */
 .products-table th.action-head {
   text-align: center;
 }
@@ -253,7 +245,6 @@
   gap: 10px;
 }
 
-/* icon buttons */
 .action-btn {
   width: 32px;
   height: 32px;
@@ -275,7 +266,6 @@
   stroke-width: 1.8;
 }
 
-/* hover */
 .action-btn:hover { background-color: #f1f5f9; color: #0f172a; }
 .action-btn.view:hover { color: #3b82f6; background: #eff6ff; }
 .action-btn.edit:hover { color: #10b981; background: #ecfdf5; }
@@ -283,7 +273,6 @@
 
 
 
-/* --- GRID VIEW (UPDATED: Professional Cards) --- */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
@@ -357,7 +346,6 @@
   font-weight: 500;
 }
 
-/* Grid Buttons */
 .card-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -375,7 +363,7 @@
   border: 1px solid transparent;
 }
 
-.card-actions button:first-child { /* Edit */
+.card-actions button:first-child {
   background-color: #fff;
   border-color: #e2e8f0;
   color: #64748b;
@@ -386,7 +374,7 @@
   background-color: #f8fafc;
 }
 
-.card-actions button:last-child { /* Delete */
+.card-actions button:last-child {
   background-color: #fee2e2;
   color: #dc2626;
 }
@@ -394,7 +382,7 @@
   background-color: #fecaca;
   
 }
-/*Change Filter Button when pressd it*/
+
 .filter-btn.active-filter {
   background-color: #ecfdf5; 
   border-color: #10b981;
@@ -403,19 +391,15 @@
 
 
 
-/* --- Modal & Pagination --- */
 .modal-overlay{
   position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.45);
   z-index: 9999;
-  
-  /* IMPORTANT: push overlay content to the right of sidebar */
   padding-left: var(--sidebar-w);
   padding-top: var(--topbar-h);
   padding-right: 16px;
   padding-bottom: 16px;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -429,17 +413,13 @@
   position: relative;
 }
 
-/* ===========================
-   RESPONSIVE FIXES
-   =========================== */
-
 @media (max-width: 900px) {
   .products-table-container {
-    overflow-x: visible; /* stop sideways scroll */
+    overflow-x: visible;
   }
 
   .products-table thead {
-    display: none; /* hide headers on mobile */
+    display: none;
   }
 
   .products-table tbody tr {

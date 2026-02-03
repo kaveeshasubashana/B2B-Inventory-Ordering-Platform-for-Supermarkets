@@ -17,7 +17,6 @@ import {
   Bar,
 } from "recharts";
 
-/* ---------- SVG ICONS ---------- */
 const IconCart = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
     <path
@@ -88,7 +87,6 @@ const IconFile = () => (
   </svg>
 );
 
-/* ---------------- helpers ---------------- */
 const STATUSES = ["All", "Pending", "Accepted", "Dispatched", "Delivered", "Rejected"];
 
 function formatLKR(value) {
@@ -308,7 +306,6 @@ export default function SupplierReports() {
         <SupplierTopbar />
 
         <div className="rep-page">
-          {/* Header */}
           <div className="rep-head">
             <div>
               <div className="rep-title-wrapper">
@@ -326,19 +323,9 @@ export default function SupplierReports() {
                 <option value="year">This Year</option>
                 <option value="custom">Custom</option>
               </select>
-
-              <button className="rep-btn" onClick={exportCSV} disabled={loading}>
-                <IconDownload />
-                CSV
-              </button>
-              <button className="rep-btn" onClick={exportPDFPlaceholder} disabled={loading}>
-                <IconFile />
-                PDF
-              </button>
             </div>
           </div>
 
-          {/* Custom range */}
           {preset === "custom" && (
             <div className="rep-custom">
               <div className="rep-field">
@@ -358,80 +345,76 @@ export default function SupplierReports() {
 
           {error && <div className="rep-error">{error}</div>}
 
-          {/* Summary cards */}
           <div className="rep-cards">
-            <div className="rep-card">
+            <div className="rep-card green">
               <div className="rep-card-top">
-                <div>
-                  <div className="rep-card-label">Total Orders</div>
-                  <div className="rep-card-value">{loading ? "—" : summary.totalOrders}</div>
-                  <div className="rep-trend up">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M7 17l5-5 5 5"/>
-                      <path d="M7 12l5-5 5 5"/>
-                    </svg>
-                    +12% vs last period
-                  </div>
-                </div>
-                <div className="rep-badge">
+                <div className="rep-card-icon">
                   <IconCart />
                 </div>
+                <div className="rep-card-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="rep-card-content">
+                <div className="rep-card-label">Total Orders</div>
+                <div className="rep-card-value">{loading ? "—" : summary.totalOrders}</div>
               </div>
             </div>
 
-            <div className="rep-card">
+            <div className="rep-card blue">
               <div className="rep-card-top">
-                <div>
-                  <div className="rep-card-label">Total Revenue</div>
-                  <div className="rep-card-value">{loading ? "—" : formatLKR(summary.totalRevenue)}</div>
-                  <div className="rep-trend up">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M7 17l5-5 5 5"/>
-                      <path d="M7 12l5-5 5 5"/>
-                    </svg>
-                    +18% vs last period
-                  </div>
-                </div>
-                <div className="rep-badge">
+                <div className="rep-card-icon">
                   <IconDollar />
                 </div>
+                <div className="rep-card-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="rep-card-content">
+                <div className="rep-card-label">Total Revenue</div>
+                <div className="rep-card-value">{loading ? "—" : formatLKR(summary.totalRevenue)}</div>
               </div>
             </div>
 
-            <div className="rep-card">
+            <div className="rep-card purple">
               <div className="rep-card-top">
-                <div>
-                  <div className="rep-card-label">Delivered Orders</div>
-                  <div className="rep-card-value">{loading ? "—" : summary.deliveredOrders}</div>
-                  <div className="rep-trend up">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M7 17l5-5 5 5"/>
-                      <path d="M7 12l5-5 5 5"/>
-                    </svg>
-                    +8% vs last period
-                  </div>
-                </div>
-                <div className="rep-badge">
+                <div className="rep-card-icon">
                   <IconTruck />
                 </div>
+                <div className="rep-card-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="rep-card-content">
+                <div className="rep-card-label">Delivered Orders</div>
+                <div className="rep-card-value">{loading ? "—" : summary.deliveredOrders}</div>
               </div>
             </div>
 
-            <div className="rep-card">
+            <div className="rep-card yellow">
               <div className="rep-card-top">
-                <div>
-                  <div className="rep-card-label">Pending Orders</div>
-                  <div className="rep-card-value">{loading ? "—" : summary.pendingOrders}</div>
-                  <div className="rep-trend neutral">&nbsp;</div>
-                </div>
-                <div className="rep-badge">
+                <div className="rep-card-icon">
                   <IconClock />
                 </div>
+                <div className="rep-card-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="rep-card-content">
+                <div className="rep-card-label">Pending Orders</div>
+                <div className="rep-card-value">{loading ? "—" : summary.pendingOrders}</div>
               </div>
             </div>
           </div>
 
-          {/* Charts */}
           <div className="rep-charts">
             <div className="rep-panel">
               <div className="rep-panel-title">Revenue Over Time</div>
@@ -517,7 +500,6 @@ export default function SupplierReports() {
             </div>
           </div>
 
-          {/* Top Performers */}
           <div className="rep-panel">
             <div className="rep-panel-title">Top Performers</div>
 

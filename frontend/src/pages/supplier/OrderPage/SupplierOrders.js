@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// ✅ FIXED PATHS HERE:
 import SupplierSidebar from "../Suppliersidebar";
 import SupplierTopbar from "../SupplierTopbar";
 
@@ -30,8 +29,6 @@ const SupplierOrders = () => {
       setLoading(false);
     }
   };
-
-  //remove order from list (not delete)
 
 const removeFromList = (orderId) => {
   const confirmRemove = window.confirm(
@@ -166,7 +163,6 @@ const removeFromList = (orderId) => {
                 </button>
               ))}
             </div>
-            {/* Search Input */}
             <div className="search-wrapper">
               <input
                 type="text"
@@ -223,7 +219,6 @@ const removeFromList = (orderId) => {
                             View
                           </button>
 
-                           {/* REMOVE BUTTON */}
                           <button
                             onClick={() => removeFromList(order._id)}
                             title="Remove from list"

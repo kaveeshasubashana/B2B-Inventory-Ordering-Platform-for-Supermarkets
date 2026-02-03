@@ -173,35 +173,35 @@ export default function SriLankaLeafletMap({
         <GeoJSON data={geo} style={geoStyle} onEachFeature={onEachFeature} />
       </MapContainer>
       
-      {/* Legend */}
+      {/* Legend - Compact */}
       <div style={{
         position: "absolute",
-        bottom: 16,
-        left: 16,
-        background: "rgba(255, 255, 255, 0.95)",
-        backdropFilter: "blur(8px)",
-        borderRadius: 10,
-        padding: "12px 14px",
-        boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+        bottom: 10,
+        left: 10,
+        background: "rgba(255, 255, 255, 0.92)",
+        backdropFilter: "blur(6px)",
+        borderRadius: 8,
+        padding: "8px 10px",
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
         zIndex: 1000,
-        fontSize: 12,
+        fontSize: 10,
       }}>
-        <div style={{ fontWeight: 600, marginBottom: 8, color: "#475569" }}>Buyer Density</div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 14, height: 14, borderRadius: 3, background: "#059669" }} />
+        <div style={{ fontWeight: 600, marginBottom: 5, color: "#475569", fontSize: 11 }}>Buyer Density</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: "#059669" }} />
             <span style={{ color: "#64748b" }}>5+ buyers</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 14, height: 14, borderRadius: 3, background: "#10b981" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: "#10b981" }} />
             <span style={{ color: "#64748b" }}>3-4 buyers</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 14, height: 14, borderRadius: 3, background: "#34d399" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: "#34d399" }} />
             <span style={{ color: "#64748b" }}>1-2 buyers</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 14, height: 14, borderRadius: 3, background: "#cbd5e1", border: "1px dashed #94a3b8" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: "#cbd5e1", border: "1px dashed #94a3b8" }} />
             <span style={{ color: "#94a3b8" }}>No buyers</span>
           </div>
         </div>

@@ -1,4 +1,3 @@
-// frontend/src/pages/supplier/SupplierDashboard.jsx
 
 import React, { useEffect, useState } from "react";
 import axios from "../../../api/axiosInstance";
@@ -9,22 +8,64 @@ import "../Suppliersidebar.css";
 import SupplierTopbar from "../SupplierTopbar";
 import "../SupplierTopbar.css";
 
-// Charts
+
 import {
   PieChart,
   Pie,
   Cell,
   Tooltip,
   Legend,
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
 
-const COLORS = ["#22c55e", "#3b82f6", "#f59e0b"];
+const COLORS = ["#10b981", "#3b82f6", "#f59e0b"];
+const GRADIENTS = [
+  { id: "greenGradient", start: "#10b981", end: "#6ee7b7" },
+  { id: "blueGradient", start: "#3b82f6", end: "#93c5fd" },
+  { id: "yellowGradient", start: "#f59e0b", end: "#fcd34d" },
+];
+
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip">
+        <p className="tooltip-label">{label}</p>
+        <p className="tooltip-value">{payload[0].value} orders</p>
+      </div>
+    );
+  }
+  return null;
+};
+
+
+const renderCustomPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
+  const RADIAN = Math.PI / 180;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  if (percent < 0.05) return null;
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="#fff"
+      textAnchor="middle"
+      dominantBaseline="central"
+      fontSize={12}
+      fontWeight={600}
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
 
 const SupplierDashboard = () => {
   const navigate = useNavigate();
@@ -51,7 +92,7 @@ const SupplierDashboard = () => {
 
         setProducts(productRes.data);
         setOrders(orderRes.data);
-        setStats(statsRes.data || {}); // Set stats if available
+        setStats(statsRes.data || {}); 
       } catch (err) {
         console.error("Dashboard fetch failed:", err);
       } finally {
@@ -70,8 +111,8 @@ const SupplierDashboard = () => {
       </div>
     );
 
-  // ---------- STAT COMPUTATION (WITH FALLBACKS) ----------
-  //
+  
+
   const totalProducts = stats.totalProducts || products.length || 0;
   const activeProducts =
     stats.activeProducts ||
@@ -80,7 +121,7 @@ const SupplierDashboard = () => {
   const lowStockProducts =
     stats.lowStock || products.filter((p) => p.stock <= 10).length || 0;
 
-  // ---------- PIE CHART DATA ----------
+  
   const stockData = [
     { name: "Good Stock", value: products.filter((p) => p.stock > 20).length },
     {
@@ -90,7 +131,7 @@ const SupplierDashboard = () => {
     { name: "Low Stock", value: lowStockProducts },
   ];
 
-  // ---------- ORDERS LINE CHART DATA ----------
+  
   const monthNames = [
     "Jan",
     "Feb",
@@ -107,7 +148,7 @@ const SupplierDashboard = () => {
   ];
   const ordersByMonth = {};
 
-  // Initialize all months with 0
+
   monthNames.forEach((month) => {
     ordersByMonth[month] = 0;
   });
@@ -123,7 +164,7 @@ const SupplierDashboard = () => {
     orders: ordersByMonth[month],
   }));
 
-  // Get low stock products for table
+ 
   const lowStockProductsList = products
     .filter((p) => p.stock <= 10)
     .sort((a, b) => a.stock - b.stock)
@@ -144,155 +185,183 @@ const SupplierDashboard = () => {
             </div>
           </div>
 
-          {/* ---------- STAT CARDS ---------- */}
+          
           <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-info">
-                <div className="stat-label">Total Products</div>
-                <div className="stat-value">
-                  {totalProducts.toLocaleString()}
+            <div className="dash-card purple">
+              <div className="dash-card-top">
+                <div className="dash-card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                  </svg>
+                </div>
+                <div className="dash-card-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
                 </div>
               </div>
-              <div className="stat-icon stat-icon-purple">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                </svg>
+              <div className="dash-card-content">
+                <div className="dash-card-label">Total Products</div>
+                <div className="dash-card-value">{totalProducts.toLocaleString()}</div>
               </div>
             </div>
 
-            <div className="stat-card">
-              <div className="stat-info">
-                <div className="stat-label">Active Products</div>
-                <div className="stat-value">
-                  {activeProducts.toLocaleString()}
+            
+            <div className="dash-card green">
+              <div className="dash-card-top">
+                <div className="dash-card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                </div>
+                <div className="dash-card-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
                 </div>
               </div>
-              <div className="stat-icon stat-icon-green">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
+              <div className="dash-card-content">
+                <div className="dash-card-label">Active Products</div>
+                <div className="dash-card-value">{activeProducts.toLocaleString()}</div>
               </div>
             </div>
 
-            <div className="stat-card">
-              <div className="stat-info">
-                <div className="stat-label">Low Stock Items</div>
-                <div className="stat-value">{lowStockProducts}</div>
+            
+            <div className="dash-card yellow">
+              <div className="dash-card-top">
+                <div className="dash-card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                  </svg>
+                </div>
+                <div className="dash-card-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
               </div>
-              <div className="stat-icon stat-icon-yellow">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                  <line x1="12" y1="9" x2="12" y2="13"></line>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
+              <div className="dash-card-content">
+                <div className="dash-card-label">Low Stock Items</div>
+                <div className="dash-card-value">{lowStockProducts}</div>
               </div>
             </div>
           </div>
 
-          {/* ---------- CHARTS SECTION ---------- */}
+          
           <div className="charts-container">
-            {/* PIE CHART */}
             <div className="chart-card">
-              <h3 className="chart-title">Stock Overview</h3>
-              <ResponsiveContainer width="100%" height={280}>
+              <div className="chart-header">
+                <div className="chart-header-icon pie-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                    <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+                  </svg>
+                </div>
+                <h3 className="chart-title">Stock Overview</h3>
+              </div>
+              <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
+                  <defs>
+                    {GRADIENTS.map((g, i) => (
+                      <linearGradient key={g.id} id={g.id} x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor={g.start} />
+                        <stop offset="100%" stopColor={g.end} />
+                      </linearGradient>
+                    ))}
+                  </defs>
                   <Pie
                     data={stockData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
+                    innerRadius={55}
+                    outerRadius={90}
                     dataKey="value"
-                    paddingAngle={2}
+                    paddingAngle={3}
+                    labelLine={false}
+                    label={renderCustomPieLabel}
                   >
                     {stockData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
+                        fill={`url(#${GRADIENTS[index % GRADIENTS.length].id})`}
+                        stroke="none"
                       />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: "#fff",
+                      border: "none",
+                      borderRadius: "12px",
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+                      padding: "12px 16px",
+                    }}
+                    formatter={(value, name) => [`${value} items`, name]}
+                  />
                   <Legend
                     verticalAlign="bottom"
-                    height={36}
+                    height={40}
                     iconType="circle"
+                    iconSize={10}
+                    formatter={(value) => <span style={{ color: '#374151', fontSize: '13px', fontWeight: 500 }}>{value}</span>}
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
 
-            {/* LINE CHART */}
+            
             <div className="chart-card chart-card-wide">
-              <h3 className="chart-title">Monthly Orders</h3>
-              <ResponsiveContainer width="100%" height={280}>
-                <LineChart data={monthlyOrdersData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <div className="chart-header">
+                <div className="chart-header-icon area-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                  </svg>
+                </div>
+                <h3 className="chart-title">Monthly Orders</h3>
+              </div>
+              <ResponsiveContainer width="100%" height={260}>
+                <AreaChart data={monthlyOrdersData}>
+                  <defs>
+                    <linearGradient id="orderGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.4} />
+                      <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.05} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
                   <XAxis
                     dataKey="month"
-                    tick={{ fill: "#6b7280", fontSize: 12 }}
+                    tick={{ fill: "#6b7280", fontSize: 12, fontWeight: 500 }}
                     axisLine={{ stroke: "#e5e7eb" }}
+                    tickLine={false}
                   />
                   <YAxis
                     allowDecimals={false}
-                    tick={{ fill: "#6b7280", fontSize: 12 }}
-                    axisLine={{ stroke: "#e5e7eb" }}
+                    tick={{ fill: "#6b7280", fontSize: 12, fontWeight: 500 }}
+                    axisLine={false}
+                    tickLine={false}
                   />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#fff",
-                      border: "1px solid #e5e7eb",
-                      borderRadius: "8px",
-                    }}
-                  />
-                  <Line
+                  <Tooltip content={<CustomTooltip />} />
+                  <Area
                     type="monotone"
                     dataKey="orders"
                     stroke="#3b82f6"
                     strokeWidth={3}
-                    dot={{ fill: "#3b82f6", r: 4 }}
-                    activeDot={{ r: 6 }}
+                    fill="url(#orderGradient)"
+                    dot={{ fill: "#fff", stroke: "#3b82f6", strokeWidth: 2, r: 4 }}
+                    activeDot={{ fill: "#3b82f6", stroke: "#fff", strokeWidth: 2, r: 6 }}
                   />
-                </LineChart>
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           </div>
 
           
-          {/* ---------- QUICK ACTIONS ---------- */}
+          
           <div className="quick-actions">
             <h3 className="section-title">Quick Actions</h3>
 
@@ -414,7 +483,7 @@ const SupplierDashboard = () => {
             </div>
           </div>
 
-          {/* ---------- LOW STOCK PRODUCTS TABLE ---------- */}
+          
           <div className="low-stock-section">
             <div className="section-header">
               <div className="section-icon">⚠️</div>

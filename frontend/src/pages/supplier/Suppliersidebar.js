@@ -2,7 +2,6 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Suppliersidebar.css';
 
-// Icons (using simple SVG icons)
 const DashboardIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="3" y="3" width="7" height="7"></rect>
@@ -70,7 +69,6 @@ const SupplierSidebar = () => {
 
   return (
     <div className="supplier-sidebar">
-      {/* Logo Section */}
       <div className="sidebar-logo">
         <div className="logo-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -82,7 +80,6 @@ const SupplierSidebar = () => {
         <span className="logo-text">SupplyHub</span>
       </div>
 
-      {/* Main Navigation */}
       <nav className="sidebar-nav">
         <ul className="nav-list">
           {menuItems.map((item) => (
@@ -101,7 +98,6 @@ const SupplierSidebar = () => {
         </ul>
       </nav>
 
-      {/* Bottom Section */}
       <div className="sidebar-bottom">
         
       

@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './SupplierTopbar.css';
 
-/* Icons */
-
 const ChevronDownIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -46,7 +44,6 @@ const SupplierTopbar = () => {
     .toUpperCase()
     .slice(0, 2);
 
-  /* Close dropdown on outside click */
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -66,7 +63,6 @@ const SupplierTopbar = () => {
   return (
     <div className="supplier-topbar">
 
-      {/* Right Section Only */}
       <div className="topbar-right">
         <div className="user-profile-container" ref={dropdownRef}>
           <button

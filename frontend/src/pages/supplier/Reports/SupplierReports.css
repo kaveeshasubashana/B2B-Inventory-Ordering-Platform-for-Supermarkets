@@ -5,7 +5,6 @@
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* Header */
 .rep-head {
   display: flex;
   justify-content: space-between;
@@ -48,7 +47,6 @@
   align-items: center;
 }
 
-/* Controls */
 .rep-select {
   height: 40px;
   padding: 0 32px 0 14px;
@@ -187,7 +185,6 @@
   font-size: 14px;
 }
 
-/* Cards */
 .rep-cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -195,76 +192,144 @@
   margin-bottom: 24px;
 }
 
+@media (max-width: 1200px) {
+  .rep-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .rep-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
 .rep-card {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 20px 22px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  transition: box-shadow 0.2s, transform 0.2s;
+  border-radius: 20px;
+  padding: 24px 28px;
+  position: relative;
+  overflow: hidden;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
 }
 
 .rep-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.rep-card.green {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
+}
+
+.rep-card.blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
+}
+
+.rep-card.purple {
+  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #c4b5fd 100%);
+}
+
+.rep-card.yellow {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fcd34d 100%);
+}
+
+.rep-card::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+.rep-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  right: 40px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
 }
 
 .rep-card-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.rep-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  transition: transform 0.3s;
+  color: #fff;
+}
+
+.rep-card:hover .rep-card-icon {
+  transform: scale(1.1);
+}
+
+.rep-card-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.rep-card-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.rep-card-check svg {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.rep-card-content {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
 }
 
 .rep-card-label {
-  color: #64748b;
-  font-weight: 500;
   font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .rep-card-value {
-  margin-top: 8px;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -1px;
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: -0.5px;
 }
 
-/* Trend */
-.rep-trend {
-  margin-top: 12px;
-  font-weight: 500;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.rep-trend.up {
-  color: #10b981;
-}
-
-.rep-trend.down {
-  color: #ef4444;
-}
-
-.rep-trend.neutral {
-  color: transparent;
-}
-
-/* Badge */
-.rep-badge {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  background: #ecfdf5;
-  color: #10b981;
-  flex-shrink: 0;
-}
-
-/* Charts */
 .rep-charts {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -299,7 +364,6 @@
   height: 320px;
 }
 
-/* Top performers */
 .rep-two {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -360,7 +424,6 @@
   border-radius: 10px;
 }
 
-/* Responsive */
 @media (max-width: 1200px) {
   .rep-cards {
     grid-template-columns: repeat(2, 1fr);

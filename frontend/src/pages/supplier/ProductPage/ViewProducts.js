@@ -341,7 +341,6 @@ const ViewProducts = () => {
                     <th>Price</th>
                     <th>Status</th>
                     <th>Category</th>
-                    {/* District removed from table view since it is implied */}
                     <th>Stock</th>
                     <th>Update</th>
                     <th className="action-head">Action</th>
@@ -561,8 +560,6 @@ const ViewProducts = () => {
                   required
                 />
               </div>
-
-              {/* District Input */}
 
               <div className="form-group">
                 <label>Category</label>

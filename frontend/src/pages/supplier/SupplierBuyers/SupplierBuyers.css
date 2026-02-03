@@ -1,12 +1,9 @@
-/* SupplierBuyers.css - Enhanced UI/UX */
-
 .buyers-page {
   padding: 32px 40px;
   background-color: #f5f7fa;
   min-height: 100vh;
 }
 
-/* Header */
 .buyers-header {
   margin-bottom: 32px;
 }
@@ -26,7 +23,6 @@
   line-height: 1.6;
 }
 
-/* Stats Cards - Modern Gradient Design */
 .buyers-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -65,23 +61,19 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
-/* Green gradient card */
 .bcard.green {
   background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
 }
 
-/* Blue gradient card */
 .bcard.blue {
   background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
 }
 
-/* White/Light card */
 .bcard.white {
   background: #ffffff;
   border: 1px solid #e2e8f0;
 }
 
-/* Decorative circles */
 .bcard::before {
   content: '';
   position: absolute;
@@ -220,11 +212,10 @@
   color: #0f172a;
 }
 
-/* Main Grid Layout */
 .buyers-grid {
   display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 24px;
   align-items: start;
 }
 
@@ -234,14 +225,12 @@
   }
 }
 
-/* Left Section - Table */
 .buyers-left {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* Filters */
 .buyers-filters {
   display: flex;
   gap: 16px;
@@ -316,7 +305,6 @@
   letter-spacing: -0.3px;
 }
 
-/* Table Card */
 .buyers-table-card {
   background: white;
   border-radius: 16px;
@@ -353,7 +341,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* Table */
 .buyers-table {
   width: 100%;
   border-collapse: collapse;
@@ -394,7 +381,6 @@
   vertical-align: middle;
 }
 
-/* Supermarket Cell */
 .sm-cell {
   min-width: 240px;
 }
@@ -452,7 +438,6 @@
   white-space: nowrap;
 }
 
-/* View Button */
 .view-btn {
   background: #3b82f6;
   color: white;
@@ -475,7 +460,6 @@
   transform: translateY(0);
 }
 
-/* Pagination Footer */
 .buyers-footer {
   display: flex;
   justify-content: space-between;
@@ -530,10 +514,10 @@
   text-align: center;
 }
 
-/* Right Section - Chart */
 .buyers-right {
   position: sticky;
   top: 24px;
+  min-width: 0;
 }
 
 .chart-card {
@@ -563,14 +547,12 @@
   border-top: 2px solid #f1f5f9;
 }
 
-/* Custom Chart Label */
 .custom-label {
   font-size: 12px;
   font-weight: 700;
   fill: #0f172a;
 }
 
-/* Recharts styling */
 .recharts-cartesian-grid-horizontal line,
 .recharts-cartesian-grid-vertical line {
   stroke: #f1f5f9;
@@ -587,7 +569,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .buyers-page {
     padding: 20px;
@@ -622,18 +603,16 @@
     font-size: 28px;
   }
 }
-/* Right side card bigger */
+
 .buyers-right .chart-card {
-  min-height: 620px;      
-  padding: 18px;
+  min-height: auto;      
+  padding: 20px;
 }
 
-/* Map wrapper full height */
 .buyers-right .chart-card > div {
   height: 100%;
 }
 
-/* Custom Leaflet Popup Styles */
 .leaflet-popup-content-wrapper {
   border-radius: 12px !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
@@ -649,15 +628,13 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Map container hover cursor */
 .leaflet-interactive {
   cursor: pointer !important;
 }
 
-/* (Optional) buyers grid balance */
 .buyers-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;  
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) 380px;  
+  gap: 24px;
 }
 
