@@ -547,6 +547,8 @@ function Header({ q, setQ, count, me, meLoading, cartCount, onCart }) {
           📦 My Orders
         </button>
 
+  
+
         <button className="hover-btn" style={styles.cartBtn} onClick={onCart}>🛒 Cart <b>({cartCount})</b></button>
       </div>
     </div>

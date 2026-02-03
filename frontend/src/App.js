@@ -12,6 +12,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+
 // Pages
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -29,6 +30,7 @@ import SupplierOrders from "./pages/supplier/OrderPage/SupplierOrders";
 import ViewProducts from "./pages/supplier/ProductPage/ViewProducts";
 import SupplierBuyers from "./pages/supplier/SupplierBuyers/SupplierBuyers";
 import SupplierReports from "./pages/supplier/Reports/SupplierReports";
+
 
 // Supermarket Pages
 import SupermarketDashboard from "./pages/supermarket/SupermarketDashboard";
@@ -91,6 +93,8 @@ const AppRoutes = () => {
 
           {/* Fallback */}
           <Route path="*" element={<HomePage />} />
+
+          
         </Route>
 
         {/* SUPPLIER AREA (no navbar, no footer) */}
@@ -100,6 +104,7 @@ const AppRoutes = () => {
           <Route path="/supplier/orders" element={<SupplierOrders />} />
           <Route path="/supplier/supermarkets" element={<SupplierBuyers />} />
           <Route path="/supplier/reports" element={<SupplierReports />} />
+        
         </Route>
       </Routes>
 
