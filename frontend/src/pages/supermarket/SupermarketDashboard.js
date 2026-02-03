@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Added for navigation
+import { useNavigate } from "react-router-dom";
 import api from "../../api/axiosInstance"; 
 
 export default function SupermarketDashboard() {
@@ -24,7 +24,8 @@ export default function SupermarketDashboard() {
   const [orderNote, setOrderNote] = useState("");
   const [placing, setPlacing] = useState(false);
 
-  
+  // ✅ ADDED ITEM POP-UP STATE
+  const [addedItemPopup, setAddedItemPopup] = useState(null); 
 
   const BASE_URL = "http://localhost:5000";
 
@@ -76,9 +77,13 @@ export default function SupermarketDashboard() {
     return { text: "In stock", bg: "#0f2f1f", bd: "#15803d" };
   };
 
-  
+  // --------- HELPERS ----------
+  const getSupplierId = (p) => p?.supplier?._id || p?.supplier || null;
 
-
+  const cartSupplierId = useMemo(() => {
+    if (cart.length === 0) return null;
+    return getSupplierId(cart[0].product);
+  }, [cart]);
 
   const cartCount = useMemo(
     () => cart.reduce((sum, x) => sum + Number(x.qty || 0), 0),
@@ -163,44 +168,42 @@ export default function SupermarketDashboard() {
     }));
 
   // --------- CART actions ----------
-const removeFromCart = (productId) => {
-  setCart((prev) =>
-    prev.filter((x) => x.product?._id !== productId)
-  );
-};
+  const removeFromCart = (productId) => {
+    setCart((prev) => prev.filter((x) => x.product?._id !== productId));
+  };
 
+  const addToCart = (product) => {
+    const stock = Number(product.stock || 0);
+    if (stock <= 0) return alert("❌ Out of stock!");
 
+    const supplierId = getSupplierId(product);
+    if (!supplierId) return alert("Error: Product has no supplier info.");
 
-
- const addToCart = (product) => {
-  const stock = Number(product.stock || 0);
-  if (stock <= 0) return alert("❌ Out of stock!");
-
-  const addQty = Number(qtyByProduct[product._id] || 1);
-
-  setCart((prev) => {
-    const idx = prev.findIndex(
-      (x) => x.product?._id === product._id
-    );
-
-    // If product already exists → increase qty
-    if (idx >= 0) {
-      const copy = [...prev];
-      copy[idx] = {
-        ...copy[idx],
-        qty: Math.min(stock, copy[idx].qty + addQty),
-      };
-      return copy;
+    if (cartSupplierId && String(supplierId) !== String(cartSupplierId)) {
+      if(!window.confirm("Cart contains items from another supplier. Clear cart and add this item?")) {
+        return;
+      }
+      const addQty = Number(qtyByProduct[product._id] || 1);
+      setCart([{ product, qty: addQty }]);
+      setAddedItemPopup(product);
+      return;
     }
 
-    // Otherwise add new product (ANY supplier allowed)
-    return [...prev, { product, qty: addQty }];
-  });
+    const addQty = Number(qtyByProduct[product._id] || 1);
 
-  alert(`✅ ${product.name} added to cart`);
-};
+    setCart((prev) => {
+      const idx = prev.findIndex((x) => x.product?._id === product._id);
+      if (idx >= 0) {
+        const copy = [...prev];
+        copy[idx] = { ...copy[idx], qty: Math.min(stock, copy[idx].qty + addQty) }; 
+        return copy;
+      }
+      return [...prev, { product, qty: addQty }];
+    });
 
-
+    // ✅ TRIGGER SUCCESS POP-UP
+    setAddedItemPopup(product);
+  };
 
   const updateCartQty = (productId, qty, maxStock) => {
     const n = Number(qty);
@@ -221,48 +224,49 @@ const removeFromCart = (productId) => {
     setCheckoutOpen(false);
     setDeliveryAddress("");
     setOrderNote("");
-    
-   
   };
 
-  // --------- PLACE ORDER ----------
+  // --------- PLACE ORDER (COD Only) ----------
   const placeOrder = async () => {
-  if (cart.length === 0) return alert("Cart is empty");
+    if (cart.length === 0) return alert("Cart is empty");
+    
+    const supplierId = cartSupplierId;
+    if (!supplierId) return alert("Supplier missing in cart");
 
-  if (!deliveryAddress.trim()) {
-    return alert("Please enter delivery address");
-  }
+    if (!deliveryAddress.trim()) {
+      return alert("Please enter delivery address");
+    }
 
-  const itemsPayload = cart.map((x) => ({
-    product: x.product._id,
-    name: x.product.name,
-    quantity: x.qty,
-    price: x.product.price,
-    supplier: x.product.supplier?._id || x.product.supplier,
-  }));
+    const itemsPayload = cart.map((x) => ({
+      product: x.product._id,
+      name: x.product.name,
+      quantity: x.qty,
+      price: x.product.price
+    }));
 
-  const payload = {
-    items: itemsPayload,
-    totalAmount: cartTotal,
-    deliveryAddress,
-    note: orderNote,
-    paymentMethod: "Cash",
+    const payload = {
+      supplierId: supplierId,
+      items: itemsPayload,
+      totalAmount: cartTotal,
+      deliveryAddress: deliveryAddress,
+      note: orderNote,
+      paymentMethod: "Cash", // ✅ Hardcoded to Cash on Delivery
+    };
+
+    try {
+      setPlacing(true);
+
+      await api.post("/orders", payload);
+      alert("✅ Order Placed Successfully via Cash on Delivery!");
+      
+      clearCart();
+    } catch (err) {
+      console.error("ORDER ERR:", err);
+      alert(err?.response?.data?.message || "Order failed. Please try again.");
+    } finally {
+      setPlacing(false);
+    }
   };
-
-  try {
-    setPlacing(true);
-
-    await api.post("/orders", payload);
-    alert("✅ Order placed successfully (Cash on Delivery)");
-
-    clearCart();
-  } catch (err) {
-    console.error("ORDER ERR:", err);
-    alert(err?.response?.data?.message || "Order failed. Please try again.");
-  } finally {
-    setPlacing(false);
-  }
-};
 
   // --------- UI ----------
   if (loading) {
@@ -275,6 +279,38 @@ const removeFromCart = (productId) => {
 
   return (
     <div style={styles.page}>
+
+      {/* ✅ ADD TO CART SUCCESS POP-UP */}
+      {addedItemPopup && (
+        <div style={styles.modalOverlay} onClick={() => setAddedItemPopup(null)}>
+          <div style={styles.successModal} onClick={(e) => e.stopPropagation()}>
+            <div style={{fontSize: '48px', marginBottom: '10px'}}>✅</div>
+            <h2 style={{color: '#fff', fontSize: '20px', marginBottom: '10px'}}>Item Added to Cart!</h2>
+            <p style={{color: '#9ca3af', marginBottom: '20px'}}>
+              <b>{addedItemPopup.name}</b> has been successfully added to your cart.
+            </p>
+
+            <div style={{display: 'flex', gap: '10px', width: '100%'}}>
+              <button 
+                style={styles.btnSecondary} 
+                onClick={() => setAddedItemPopup(null)}
+              >
+                Continue Shopping
+              </button>
+              <button 
+                style={styles.btnPrimary} 
+                onClick={() => {
+                  setAddedItemPopup(null);
+                  setCheckoutOpen(true);
+                }}
+              >
+                Go to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Header
         q={q}
         setQ={setQ}
@@ -364,6 +400,7 @@ const removeFromCart = (productId) => {
         </div>
       )}
 
+      {/* ✅ CHECKOUT MODAL */}
       {checkoutOpen && (
         <div style={styles.modalOverlay} onClick={() => setCheckoutOpen(false)}>
           <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -378,40 +415,38 @@ const removeFromCart = (productId) => {
               <>
                 <div style={styles.cartTable}>
                   {cart.map((x) => (
-  <div key={x.product._id} style={styles.cartItemRow}>
-    <div style={{ flex: 1 }}>
-      <div style={{ fontWeight: 800 }}>{x.product.name}</div>
-      <div style={{ color: "#94a3b8", fontSize: 12 }}>
-        {fmtLKR(x.product.price)} each
-      </div>
-    </div>
+                    <div key={x.product._id} style={styles.cartItemRow}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 800 }}>{x.product.name}</div>
+                        <div style={{ color: "#94a3b8", fontSize: 12 }}>
+                          {fmtLKR(x.product.price)} each
+                        </div>
+                      </div>
 
-    <input
-      style={styles.cartQty}
-      type="number"
-      min={1}
-      max={x.product.stock}
-      value={x.qty}
-      onChange={(e) =>
-        updateCartQty(
-          x.product._id,
-          e.target.value,
-          x.product.stock
-        )
-      }
-    />
+                      <input
+                        style={styles.cartQty}
+                        type="number"
+                        min={1}
+                        max={x.product.stock}
+                        value={x.qty}
+                        onChange={(e) =>
+                          updateCartQty(
+                            x.product._id,
+                            e.target.value,
+                            x.product.stock
+                          )
+                        }
+                      />
 
-    {/* ✅ REMOVE BUTTON */}
-    <button
-      onClick={() => removeFromCart(x.product._id)}
-      style={styles.removeBtn}
-      title="Remove item"
-    >
-      ✕
-    </button>
-  </div>
-))}
-
+                      <button
+                        onClick={() => removeFromCart(x.product._id)}
+                        style={styles.removeBtn}
+                        title="Remove item"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
                 </div>
 
                 <div style={styles.formGroup}>
@@ -424,30 +459,29 @@ const removeFromCart = (productId) => {
                   <input style={styles.input} value={orderNote} onChange={(e) => setOrderNote(e.target.value)} placeholder="Any special instructions..." />
                 </div>
 
-                {/* Payment UI */}
-               <div style={styles.formGroup}>
-  <label style={styles.label}>Payment Method</label>
-
-  <div
-    style={{
-      ...styles.payBtn,
-      background: "#3b82f6",
-      border: "1px solid #60a5fa",
-      textAlign: "center",
-      cursor: "default"
-    }}
-  >
-    💵 Cash on Delivery
-  </div>
-</div>
-
-
-               
+                {/* ✅ PAYMENT METHOD - LOCKED TO CASH ON DELIVERY */}
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Payment Method</label>
+                  <div
+                    style={{
+                      background: "#1f2937",
+                      border: "1px solid #374151",
+                      color: "#9ca3af",
+                      padding: "12px",
+                      borderRadius: "8px",
+                      textAlign: "center",
+                      fontWeight: "600",
+                      cursor: "not-allowed"
+                    }}
+                  >
+                    💵 Cash on Delivery (COD) Only
+                  </div>
+                </div>
 
                 <div style={styles.modalFoot}>
                   <button style={styles.resetBtn} onClick={clearCart} disabled={placing}>Clear Cart</button>
                   <button style={{ ...styles.addBtn, padding: "10px 14px" }} onClick={placeOrder} disabled={placing}>
-                    {placing ? "Processing..." : "Place Order"}
+                    {placing ? "Placing Order..." : "Place Order"}
                   </button>
                 </div>
               </>
@@ -459,7 +493,6 @@ const removeFromCart = (productId) => {
   );
 }
 
-// ✅ Updated Header with Navigatio
 function Header({ q, setQ, count, me, meLoading, cartCount, onCart }) {
   const navigate = useNavigate(); 
 
@@ -472,7 +505,6 @@ function Header({ q, setQ, count, me, meLoading, cartCount, onCart }) {
           {meLoading ? <div style={{ color: "#94a3b8", fontSize: 13 }}>Loading...</div> : me ? <div><div style={styles.profileMiniName}>{me.name}</div><div style={styles.profileMiniEmail}>{me.district}</div></div> : <div style={{ color: "#94a3b8", fontSize: 13 }}>No profile</div>}
         </div>
         
-        {/* ✅ My Orders Button Added */}
         <button style={{...styles.cartBtn, background: '#4f46e5', marginLeft: '10px'}} onClick={() => navigate('/supermarket/my-orders')}>
           📦 My Orders
         </button>
@@ -540,21 +572,42 @@ const styles = {
   textarea: { width: "100%", minHeight: 80, borderRadius: 8, border: "1px solid #374151", background: "#0b1220", color: "#e5e7eb", padding: 12, outline: "none", resize: 'vertical' },
   input: { width: "100%", height: 42, borderRadius: 8, border: "1px solid #374151", background: "#0b1220", color: "#e5e7eb", padding: "0 12px", outline: "none" },
   modalFoot: { padding: 20, display: "flex", justifyContent: "space-between", gap: 12, borderTop: "1px solid #374151", background: '#1f2937' },
-  payBtn: { flex: 1, padding: 10, borderRadius: 8, color: 'white', cursor: 'pointer', fontWeight: 600, transition: 'background 0.2s', fontSize: 13 },
-  cardForm: { background: 'rgba(255,255,255,0.05)', padding: 15, borderRadius: 8, marginBottom: 15, margin: '0 20px', border: '1px solid #374151' },
-  removeBtn: {
-    background: "transparent",
-    border: "1px solid #374151",
-    color: "#ef4444",
-    width: 32,
-    height: 32,
-    borderRadius: 6,
-    cursor: "pointer",
-    fontSize: 16,
-    fontWeight: 700,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  removeBtn: { background: "transparent", border: "1px solid #374151", color: "#ef4444", width: 32, height: 32, borderRadius: 6, cursor: "pointer", fontSize: 16, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
   
+  // ✅ SUCCESS POP-UP STYLES
+  successModal: {
+    background: '#111827',
+    padding: '30px',
+    borderRadius: '16px',
+    border: '1px solid #374151',
+    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    textAlign: 'center',
+    width: '90%',
+    maxWidth: '350px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  btnSecondary: {
+    flex: 1,
+    padding: '10px',
+    background: 'transparent',
+    border: '1px solid #374151',
+    color: '#e5e7eb',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: '600',
+    fontSize: '13px'
+  },
+  btnPrimary: {
+    flex: 1,
+    padding: '10px',
+    background: '#3b82f6',
+    border: 'none',
+    color: '#fff',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: '600',
+    fontSize: '13px'
+  }
 };
